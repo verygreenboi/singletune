@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SingleTune</string>
+    <string name="title_section1">Timeline</string>
+    <string name="title_section2">Popular</string>
+    <string name="title_section3">Section 3</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Welcome to SingleTune</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_signup">Signup</string>
+    <string name="signup_textview_label">Signup</string>
+    <string name="signup_intro_text">Don\'t have an account? No problem!</string>
+    <string name="login_button_label">SIGN IN</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="register_button_label">SIGN UP</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="email_hint">Email</string>
+    <string name="signup_error_message">Make sure your Username, email and password are entered.</string>
+    <string name="title_signup_error">Oops!!!</string>
+    <string name="signup_password_mismatch_message">Your password and confirmation do not match</string>
+    <string name="login_error_message">Make sure you enter your username and password.</string>
+    <string name="action_logout">Logout</string>
+    <string name="login_error_label">Yikes!!!</string>
+    <string name="no_timeline_item_warning">No activities on your Timeline.</string>
+    <string name="action_userProfile_title">Profile</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="profile_image_desc">Profile Image</string>
+    <string name="edit_profile_button_text">Edit Profile</string>
+    <string name="dummy_meta_count_1">338</string>
+    <string name="tune_count_label_plural">Tunes</string>
+    <string name="friends_count_label_plural">Friends</string>
+    <string name="followers_count_label_plural">Followers</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search for Friends</string>
+    <string name="title_activity_search_results">Search</string>
+    <string name="title_activity_notifications">NotificationsActivity</string>
+    <string name="follow_button_text">Follow</string>
+    <string name="username_label">Username</string>
+    <string name="userAvaterPlaceholder">Placeholder for user avater</string>
+    <string name="unfollow_button_text">Unfollow</string>
+    <string name="user_follow_text">Yay! %s is now following you!</string>
+    <string name="title_activity_voice_recorder">VoiceRecorderActivity</string>
+    <string name="mp3_size_limit">File should NOT exceed 10mb.</string>
+    <string name="general_error">Sorry, an error occurred.</string>
+    <string name="error_opening_file">File Not Found!</string>
+    <string name="error_file_size_too_large">File must not exceed 10mb.</string>
+    <string name="addTuneMenu">Add Tune</string>
+    <string name="error_external_storage">There was a problem accessing your system\'s storage.</string>
+    <string name="SendTuneActivityLabel">Upload your tune!</string>
+    <string name="action_send_tune_title">Send</string>
+    <string name="error_selecting_file_title">We\'re sorry!</string>
+    <string name="error_selecting_file">There was an error with the file selected. Please select a different file.</string>
+    <string name="tune_title_hint">Title</string>
+    <string name="tune_desc_hint">Caption</string>
+    <string name="content_desc_tune_art">Tune Art</string>
+    <string name="empty_title_error_message">Please enter the title of your tune.</string>
+    <string name="empty_title_error_title">Title?</string>
+    <string name="success_message">Tune uploaded!</string>
+    <string name="error_sending_message">Sorry, we couldn\'t upload your tune.</string>
+    <string name="callout_toast_message">Hey! %s</string>
+    <string name="hashtag_toast_message">Tags for tags: %s</string>
+    <string name="tune_listView_image">Tune Image</string>
+    <string name="tune_listview_artist">Artist</string>
+    <string name="dash_divider">-</string>
+    <string name="tune_listview_title">Title</string>
+    <string name="app_subtitle">Vocal, Social</string>
+    <string name="cancel_button_label">CANCEL</string>
+
+    <string-array name="tune_choice">
+        <item>Record Voice Note</item>
+        <item>Choose Voice Note</item>
+        <item>Choose MP3</item>
+    </string-array>
+
+    <string name="title_activity_player">Player</string>
+    <string name="title_activity_tune">TuneActivity</string>
+    <string name="tune_like_textView_label">Like</string>
+    <string name="progressive_error_message">Media not valid for progressive playback</string>
+    <string name="dead_server_error_message">Server died! Check your connection.</string>
+    <string name="unknown_media_error_message">An unknown error has occurred.</string>
+    <string name="play_notification_ticker_text">Playing...</string>
+    <string name="not_connected_error_message">Please connect to a network and try again.</string>
+    <string name="not_connected_error_title">Network not connected...</string>
+
+</resources>

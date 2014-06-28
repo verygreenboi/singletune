@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?><!-- File created by the Android Action Bar Style Generator
+
+     Copyright (C) 2011 The Android Open Source Project
+     Copyright (C) 2012 readyState Software Ltd
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+
+    <style name="SingleTuneTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_singletune
+        </item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Singletune</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Singletune</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Singletune</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Singletune</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Singletune</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_singletune</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_singletune
+        </item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Singletune
+        </item>
+
+        <item name="android:editTextBackground">@drawable/singletune_edit_text_holo_light</item>
+
+        <item name="android:textColorHighlight">#994c8ab7</item>
+        <item name="android:textSelectHandleLeft">@drawable/singletune_text_select_handle_left
+        </item>
+        <item name="android:textSelectHandleRight">@drawable/singletune_text_select_handle_right
+        </item>
+        <item name="android:textSelectHandle">@drawable/singletune_text_select_handle_middle</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewsingleTune</item>
+
+        <item name="android:listChoiceIndicatorMultiple">@drawable/singletune_btn_check_holo_light
+        </item>
+
+        <item name="android:imageButtonStyle">@style/ImageButtonsingleTune</item>
+
+        <item name="android:dropDownSpinnerStyle">@style/SpinnersingleTune</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarsingleTune</item>
+
+    </style>
+
+    <style name="AutoCompleteTextViewsingleTune" parent="android:Widget.Holo.Light.AutoCompleteTextView">
+        <item name="android:dropDownSelector">@drawable/singletune_list_selector_holo_light</item>
+        <item name="android:background">@drawable/singletune_edit_text_holo_light</item>
+    </style>
+
+    <style name="ImageButtonsingleTune" parent="android:Widget.Holo.Light.ImageButton">
+        <item name="android:background">@drawable/singletune_btn_default_holo_light</item>
+    </style>
+
+    <style name="SpinnersingleTune" parent="android:Widget.Holo.Light.Spinner">
+        <item name="android:background">@drawable/singletune_spinner_background_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/singletune_list_selector_holo_light</item>
+    </style>
+
+    <style name="ProgressBarsingleTune" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/singletune_progress_horizontal_holo_light
+        </item>
+        <item name="android:indeterminateDrawable">
+            @drawable/singletune_progress_indeterminate_horizontal_holo_light
+        </item>
+    </style>
+
+    <style name="ActionBar.Solid.Singletune" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:background">@drawable/ab_solid_singletune</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_singletune</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_singletune</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Singletune</item>
+    </style>
+
+    <style name="ActionBar.Transparent.Singletune" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@drawable/ab_transparent_singletune</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Singletune</item>
+    </style>
+
+    <style name="PopupMenu.Singletune" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_singletune</item>
+    </style>
+
+    <style name="DropDownListView.Singletune" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_singletune</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Singletune" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_singletune</item>
+    </style>
+
+    <style name="DropDownNav.Singletune" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:background">@drawable/spinner_background_ab_singletune</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_singletune</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_singletune</item>
+    </style>
+
+    <style name="ProgressBar.Singletune" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_singletune</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.Singletune" parent="@android:style/Widget.Holo.Light.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_singletune</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Singletune.Widget" parent="@android:style/Theme.Holo">
+        <item name="android:popupMenuStyle">@style/PopupMenu.Singletune</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Singletune</item>
+    </style>
+
+    <style name="GridImage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+
+    <style name="AuthBackground">
+
+    </style>
+
+    <style name="AuthBackgroundImage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:src">@drawable/bg_image</item>
+        <item name="android:layout_alignParentTop">true</item>
+    </style>
+
+    <style name="appTitle.appSubtitle">
+        <item name="android:text">@string/app_subtitle</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="appTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/app_name</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">64dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="editTextLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginLeft">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingLeft">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingRight">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingBottom">@dimen/activity_horizontal_margin</item>
+        <item name="android:background">@drawable/rounded_corner</item>
+    </style>
+
+    <style name="AuthEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorHint">@color/light_gray</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="AuthButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_vertical_margin</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/button_custom</item>
+    </style>
+
+    <style name="linkText">
+        <item name="android:textColor">@color/singletune_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

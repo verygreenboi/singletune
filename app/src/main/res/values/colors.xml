@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <color name="singletune_color">#4c8ab7</color>
+
+    <color name="light_blue">#F6F7FF</color>
+    <color name="alpha_deep_blue">#424953</color>
+    <color name="reg_deep_blue">#424953</color>
+    <color name="tune_ic_bg_blue">#212226</color>
+    <color name="light_gray">#bbbbbb</color>
+    <color name="dark_green_button">#7DB441</color>
+    <color name="light_green_button">#AED286</color>
+    <color name="orange_text_color">#E6796B</color>
+</resources>

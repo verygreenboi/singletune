@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tune_title"
+        android:layout_alignParentLeft="true"
+        android:hint="@string/tune_title_hint"
+        android:layout_below="@+id/tune_art"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+
+        android:id="@+id/tune_desc"
+        android:layout_below="@+id/tune_title"
+        android:layout_alignParentLeft="true"
+        android:hint="@string/tune_desc_hint"
+        android:lines="2" />
+
+    <ImageButton
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:id="@+id/tune_art"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/content_desc_tune_art"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:src="@drawable/default_avatar"
+        android:layout_marginTop="@dimen/activity_vertical_margin" />
+</RelativeLayout>
