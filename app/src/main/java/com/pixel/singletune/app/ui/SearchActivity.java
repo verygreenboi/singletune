@@ -121,11 +121,10 @@ public class SearchActivity extends Activity {
         setProgressBarIndeterminateVisibility(true);
 
         String gUsername = gUname.getText().toString();
-
-        Log.d("singleTune", "Check for " + gUsername);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereContains("username", gUsername);
         query.orderByAscending(ParseConstants.KEY_USERNAME);
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
         query.setLimit(1000);
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override

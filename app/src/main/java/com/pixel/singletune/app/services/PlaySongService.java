@@ -41,6 +41,7 @@ public class PlaySongService extends Service
     //Setup broadcast identifier and intent
     public static final String BROADCAST_BUFFER = "com.pixel.singletune.app.broadcastbuffer";
     Intent bufferIntent;
+    int tunePos;
 
     @Override
     public void onCreate() {
@@ -97,6 +98,8 @@ public class PlaySongService extends Service
 
         //Get url from intent
         setAudioLink = i.getExtras().getString("tuneURL");
+        // get tune Position from intent
+        tunePos = i.getExtras().getInt("tunePos");
 
         //Reset MediaPlayer
         mp.reset();
@@ -107,10 +110,11 @@ public class PlaySongService extends Service
             try {
                 mp.setDataSource(setAudioLink);
 
-                sendBufferingBroadcast();
+                sendBufferingBroadcast(tunePos);
 
                 //Prepare MediaPlayer
                 mp.prepareAsync();
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (IllegalArgumentException e) {
@@ -123,13 +127,15 @@ public class PlaySongService extends Service
         return START_STICKY;
     }
 
-    private void sendBufferingBroadcast() {
+    private void sendBufferingBroadcast(int tunePos) {
         bufferIntent.putExtra("Buffering", "1");
+        bufferIntent.putExtra("tunePos", tunePos);
         sendBroadcast(bufferIntent);
     }
 
     private void sendBufferCompleteBroadcast() {
         bufferIntent.putExtra("Buffering", "0");
+        bufferIntent.putExtra("tunePos", tunePos);
         sendBroadcast(bufferIntent);
     }
 

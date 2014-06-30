@@ -70,8 +70,6 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         }
 
         final String tuneURL = tunes.getSongFile().getUrl();
-
-        Object mgr = new Object();
         holder.title.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Aaargh.ttf"));
         holder.artist.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Aaargh.ttf"));
 
@@ -93,7 +91,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
                     checkConnectivity();
                     if (isOnline) {
                         stopMusic();
-                        playMusic(tuneURL);
+                        playMusic(tuneURL, position);
                     } else {
                         AlertDialog.Builder ad = new AlertDialog.Builder(getContext());
                         ad.setMessage(R.string.not_connected_error_message)
@@ -116,9 +114,10 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         return convertView;
     }
 
-    private void playMusic(String tuneURL) {
+    private void playMusic(String tuneURL, int p) {
         Intent mServiceIntent = new Intent(getContext(), PlaySongService.class);
         mServiceIntent.putExtra("tuneURL", tuneURL);
+        mServiceIntent.putExtra("tunePos", p);
         getContext().startService(mServiceIntent);
     }
 

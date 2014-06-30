@@ -3,11 +3,8 @@ package com.pixel.singletune.app.ui;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +25,6 @@ import com.parse.ParseUser;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.adapters.SectionsPagerAdapter;
-import com.pixel.singletune.app.services.PlaySongService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -324,16 +320,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-//        if (id == R.id.action_logout) {
-//            ParseUser.logOut();
-//            navigateToLogin();
-//        } else if (id == R.id.action_profile) {
-//            Intent intent = new Intent(this, ProfileActivity.class);
-//            startActivity(intent);
-//        } else if (id == R.id.search){
-//            Intent intent = new Intent(this, SearchActivity.class);
-//            startActivity(intent);
-//        }
+
         switch (id){
             case R.id.action_logout:
                 ParseUser.logOut();
@@ -372,47 +359,46 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     }
 
-    private void showPD(Intent bufferIntent) {
-        String bufferValue = bufferIntent.getStringExtra("Buffering");
-        int bufferIntValue = Integer.parseInt(bufferValue);
-        switch (bufferIntValue) {
-            case 0:
-                if (pdBuff != null) {
-                    pdBuff.dismiss();
-                }
-                break;
-            case 1:
-                BufferDialog();
-                break;
-        }
-    }
-
-    private void BufferDialog() {
-        pdBuff = ProgressDialog.show(MainActivity.this, "Buffering...", "Acquiring Tune...", true);
-    }
-
-    private BroadcastReceiver broadcastBufferReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent bufferIntent) {
-            showPD(bufferIntent);
-        }
-    };
+//    private void showPD(Intent bufferIntent) {
+//        String bufferValue = bufferIntent.getStringExtra("Buffering");
+//        int bufferIntValue = Integer.parseInt(bufferValue);
+//        Log.d(TAG, String.valueOf(bufferIntent.getExtras().getInt("tunePos")));
+//        switch (bufferIntValue) {
+//            case 0:
+//                if (pdBuff != null) {
+//                    pdBuff.dismiss();
+//                }
+//                break;
+//            case 1:
+//                BufferDialog();
+//                break;
+//        }
+//    }
+//
+//    private void BufferDialog() {
+//        pdBuff = new ProgressDialog(this);
+//        pdBuff.show(MainActivity.this, "Please wait", "Buffering...", true);
+//    }
+//
+//    private void cancelBuffer() {
+//        Intent mServiceIntent = new Intent(this, PlaySongService.class);
+//        stopService(mServiceIntent);
+//    }
+//
+//    private BroadcastReceiver broadcastBufferReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent bufferIntent) {
+//            //showPD(bufferIntent);
+//        }
+//    };
 
     @Override
     protected void onPause() {
-        if (mBufferBroadcastIsRegistered) {
-            unregisterReceiver(broadcastBufferReceiver);
-            mBufferBroadcastIsRegistered = false;
-        }
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        if (!mBufferBroadcastIsRegistered) {
-            registerReceiver(broadcastBufferReceiver, new IntentFilter(PlaySongService.BROADCAST_BUFFER));
-            mBufferBroadcastIsRegistered = true;
-        }
         super.onResume();
     }
 }

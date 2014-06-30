@@ -7,5 +7,6 @@
     <dimen name="user_list_top_text_horizontal_padding">8dp</dimen>
     <dimen name="user_grid_top_text_horizontal_padding">4dp</dimen>
     <dimen name="user_grid_spacing">8dp</dimen>
+    <dimen name="like_meta_horizontal_margin">8dp</dimen>
 
 </resources>

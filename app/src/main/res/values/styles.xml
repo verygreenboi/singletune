@@ -192,5 +192,10 @@
     <style name="linkText">
         <item name="android:textColor">@color/singletune_color</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="linkText.count">
+        <item name="android:textColor">@color/light_gray</item>
     </style>
 </resources>

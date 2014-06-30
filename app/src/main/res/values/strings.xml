@@ -83,5 +83,8 @@
     <string name="play_notification_ticker_text">Playing...</string>
     <string name="not_connected_error_message">Please connect to a network and try again.</string>
     <string name="not_connected_error_title">Network not connected...</string>
+    <string name="tune_comment_text">Comment</string>
+    <string name="tune_download_text">Download</string>
+    <string name="tune_like_count">0</string>
 
 </resources>
