@@ -11,7 +11,7 @@
         android:id="@+id/add_tune"
         android:showAsAction="always"
         android:title="@string/addTuneMenu"
-        android:icon="@drawable/mr_ic_audio_vol"/>
+        android:icon="@drawable/ic_menu_send"/>
     <item
         android:id="@+id/action_profile"
         android:icon="@drawable/ic_action_user"

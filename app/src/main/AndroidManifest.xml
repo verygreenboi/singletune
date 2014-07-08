@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pixel.singletune.app">
+    package="com.pixel.singletune.app" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -30,16 +30,16 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/SingleTuneTheme">
+        android:theme="@style/SingleTuneTheme" >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".ui.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -50,7 +50,7 @@
         <activity
             android:name=".ui.SignupActivity"
             android:label="@string/title_activity_signup"
-            android:parentActivityName=".ui.LoginActivity">
+            android:parentActivityName=".ui.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="LoginActivity" />
@@ -59,7 +59,7 @@
             android:name=".ui.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:parentActivityName=".ui.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -67,7 +67,7 @@
         <activity
             android:name=".ui.SearchActivity"
             android:label="@string/title_activity_search_results"
-            android:parentActivityName=".ui.MainActivity">
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -75,7 +75,7 @@
         <activity
             android:name=".ui.NotificationsActivity"
             android:label="@string/title_activity_notifications"
-            android:parentActivityName=".ui.MainActivity">
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -83,7 +83,7 @@
         <activity
             android:name=".ui.SendTuneActivity"
             android:label="@string/SendTuneActivityLabel"
-            android:parentActivityName=".ui.MainActivity">
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -91,7 +91,7 @@
         <activity
             android:name=".ui.VoiceRecorderActivity"
             android:label="@string/title_activity_voice_recorder"
-            android:parentActivityName=".ui.MainActivity">
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -99,9 +99,9 @@
 
         <receiver
             android:name=".receivers.NotificationReceiver"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
-            <action android:name="com.pixel.singletune.app.UPDATE_STATUS" />
+                <action android:name="com.pixel.singletune.app.UPDATE_STATUS" />
             </intent-filter>
         </receiver>
 
@@ -109,17 +109,17 @@
 
         <receiver
             android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
                 <category android:name="com.pixel.singletune.app" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
@@ -127,7 +127,7 @@
         <activity
             android:name=".ui.PlayerActivity"
             android:label="@string/title_activity_player"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -135,13 +135,13 @@
 
         <service
             android:name=".services.PlaySongService"
-            android:exported="false"></service>
+            android:exported="false" />
 
-        <receiver
-            android:name=".receivers.PlayReceiver"
+        <service
+            android:name=".services.songUploadService"
             android:enabled="true"
-            android:exported="false"></receiver>
-
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

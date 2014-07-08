@@ -1,87 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/light_gray">
+    android:layout_height="wrap_content"
+    android:background="@color/light_gray"
+    android:layout_marginTop="@dimen/list_horizontal_margin">
 
-    <RelativeLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="280dp">
+        android:layout_height="280dp"
+        android:id="@+id/tuneImage"
+        android:contentDescription="@string/tune_listView_image"
+        android:src="@drawable/tune_placeholder"
+        style="@style/GridImage"/>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/tuneImage"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/tune_listView_image"
-            android:src="@drawable/tune_placeholder" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/alpha_deep_blue"
-            android:orientation="horizontal"
-            android:layout_alignBottom="@+id/tuneImage"
-            android:id="@+id/linearLayout">
-
-            <ImageButton
-                android:id="@+id/btnPlay"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:scaleType="fitCenter"
-                android:background="@color/tune_ic_bg_blue"
-                android:src="@drawable/btn_play" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tuneListViewTitle"
-                    android:textSize="24sp"
-                    android:textColor="@android:color/white"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="8dp"
-                    android:text="@string/tune_listview_title" />
-
-                <TextView
-                    android:id="@+id/tuneListViewArtist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/white"
-                    android:paddingLeft="16dp"
-                    android:text="@string/tune_listview_artist" />
-
-            </LinearLayout>
-
-            <ProgressBar
-                android:layout_marginTop="8dp"
-                android:id="@+id/tuneBufferProgress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="invisible" />
-
-
-        </LinearLayout>
-
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/alpha_deep_blue"
         android:orientation="horizontal"
+        android:layout_alignBottom="@+id/tuneImage"
+        android:id="@+id/tuneTitleLayout">
+
+        <ImageButton
+            android:id="@+id/btnPlay"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="fitCenter"
+            android:background="@color/tune_ic_bg_blue"
+            android:src="@drawable/btn_play" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tuneListViewTitle"
+                android:textSize="24sp"
+                android:textColor="@android:color/white"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:text="@string/tune_listview_title" />
+
+            <TextView
+                android:id="@+id/tuneListViewArtist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:paddingLeft="16dp"
+                android:text="@string/tune_listview_artist" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:layout_marginTop="8dp"
+            android:id="@+id/tuneBufferProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/tune_action_meta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tuneTitleLayout"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/like_meta_horizontal_margin"
@@ -154,5 +147,13 @@
 
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/white"
+        android:layout_below="@+id/tune_action_meta">
+
+    </LinearLayout>
+
+</RelativeLayout>
 

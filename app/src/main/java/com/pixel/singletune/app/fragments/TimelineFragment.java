@@ -37,19 +37,12 @@ public class TimelineFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
-        return rootView;
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
 
         getActivity().setProgressBarIndeterminateVisibility(true);
 
         ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
         query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
         query.include("parent");
-        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
         query.findInBackground(new FindCallback<Tunes>() {
             @Override
             public void done(List<Tunes> tunes, ParseException e) {
@@ -72,6 +65,14 @@ public class TimelineFragment extends ListFragment {
                 }
             }
         });
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
 
         // Register BCASTreceiver
 
