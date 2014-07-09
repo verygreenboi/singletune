@@ -149,12 +149,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         private boolean isExternalStorageAvailable() {
             String state = Environment.getExternalStorageState();
 
-            if (state.equals(Environment.MEDIA_MOUNTED)) {
-                return true;
-            }
-            else {
-                return false;
-            }
+            return state.equals(Environment.MEDIA_MOUNTED);
         }
     };
     /**
@@ -235,12 +230,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == PICK_VOICE_NOTE_REQUEST || requestCode == PICK_MP3_REQUEST) {
-                if (data == null) {
-                    Toast.makeText(this, getString(R.string.general_error), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    mMediaUri = data.getData();
-                }
+                mMediaUri = data.getData();
 
                 Log.i(TAG, "Media URI: " + mMediaUri);
                 if (requestCode == PICK_MP3_REQUEST) {
@@ -262,8 +252,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     }
                     finally {
                         try {
-                            if (inputStream == null) throw new AssertionError();
-                            inputStream.close();
+                            if (inputStream != null) {
+                                inputStream.close();
+                            }
                         } catch (IOException e) { /* Intentionally blank */ }
                     }
 
@@ -358,40 +349,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
 
     }
-
-//    private void showPD(Intent bufferIntent) {
-//        String bufferValue = bufferIntent.getStringExtra("Buffering");
-//        int bufferIntValue = Integer.parseInt(bufferValue);
-//        Log.d(TAG, String.valueOf(bufferIntent.getExtras().getInt("tunePos")));
-//        switch (bufferIntValue) {
-//            case 0:
-//                if (pdBuff != null) {
-//                    pdBuff.dismiss();
-//                }
-//                break;
-//            case 1:
-//                BufferDialog();
-//                break;
-//        }
-//    }
-//
-//    private void BufferDialog() {
-//        pdBuff = new ProgressDialog(this);
-//        pdBuff.show(MainActivity.this, "Please wait", "Buffering...", true);
-//    }
-//
-//    private void cancelBuffer() {
-//        Intent mServiceIntent = new Intent(this, PlaySongService.class);
-//        stopService(mServiceIntent);
-//    }
-//
-//    private BroadcastReceiver broadcastBufferReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent bufferIntent) {
-//            //showPD(bufferIntent);
-//        }
-//    };
-
     @Override
     protected void onPause() {
         super.onPause();

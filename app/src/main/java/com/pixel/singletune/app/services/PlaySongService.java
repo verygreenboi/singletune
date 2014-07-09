@@ -156,6 +156,7 @@ public class PlaySongService extends Service
         if (psl != null) {
             tm.listen(psl, PhoneStateListener.LISTEN_NONE);
         }
+        sendBufferCompleteBroadcast();
 
         destroyNotification();
     }
@@ -182,12 +183,15 @@ public class PlaySongService extends Service
         switch (what) {
             case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
                 Toast.makeText(this, R.string.progressive_error_message, Toast.LENGTH_SHORT).show();
+                sendBufferCompleteBroadcast();
                 break;
             case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
                 Toast.makeText(this, R.string.dead_server_error_message, Toast.LENGTH_SHORT).show();
+                sendBufferCompleteBroadcast();
                 break;
             case MediaPlayer.MEDIA_ERROR_UNKNOWN:
                 Toast.makeText(this, R.string.unknown_media_error_message, Toast.LENGTH_SHORT).show();
+                sendBufferCompleteBroadcast();
                 break;
         }
         return false;
