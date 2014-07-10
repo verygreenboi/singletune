@@ -3,8 +3,11 @@ package com.pixel.singletune.app.ui;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,7 +41,7 @@ import java.util.Locale;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
     // Progress dialog and bcast receiver
-    boolean mBufferBroadcastIsRegistered;
+    boolean mUploadBroadcastIsRegistered;
     private ProgressDialog pdBuff = null;
 
     public static final int TAKE_VOICE_NOTE_REQUEST = 0;
@@ -351,11 +354,47 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
     @Override
     protected void onPause() {
+
         super.onPause();
+        if (mUploadBroadcastIsRegistered){
+            unregisterReceiver(broadcastUploadReceiver);
+            mUploadBroadcastIsRegistered = false;
+        }
     }
 
     @Override
     protected void onResume() {
+
         super.onResume();
+
+        if (!mUploadBroadcastIsRegistered){
+            this.registerReceiver(broadcastUploadReceiver, new IntentFilter(SendTuneActivity.BROADCAST_UPLOAD));
+            mUploadBroadcastIsRegistered = true;
+        }
+    }
+
+    private BroadcastReceiver broadcastUploadReceiver = new BroadcastReceiver(){
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showPB(intent);
+        }
+    };
+
+    private void showPB(Intent intent) {
+        String uploadValue = intent.getStringExtra(ParseConstants.KEY_UPLOADING);
+        int uploadValueInt = Integer.parseInt(uploadValue);
+        intProg(uploadValueInt);
+    }
+
+    private void intProg(int uploadValueInt) {
+        switch (uploadValueInt){
+            case 0:
+                setProgressBarIndeterminate(false);
+                break;
+            case 1:
+                setProgressBarIndeterminate(true);
+                break;
+        }
     }
 }

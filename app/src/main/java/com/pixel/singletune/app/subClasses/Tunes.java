@@ -54,4 +54,17 @@ public class Tunes extends ParseObject {
     public void setFileType(String fileType) {
         put(ParseConstants.KEY_FILE_TYPE, fileType);
     }
+
+    public int getLikeCount(){
+        return getInt("Likes");
+    }
+
+    public void increaseLike(int likeCount){
+        increment("Likes", +likeCount);
+    }
+    public void reduceLike(int likeCount){
+        if (getLikeCount() > 0) {
+            increment("Likes", -likeCount);
+        }
+    }
 }

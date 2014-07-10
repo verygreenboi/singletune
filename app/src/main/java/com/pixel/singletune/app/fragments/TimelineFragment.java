@@ -23,6 +23,7 @@ import com.pixel.singletune.app.subClasses.Tunes;
 import com.pixel.singletune.app.ui.MainActivity;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class TimelineFragment extends ListFragment {
@@ -40,8 +41,16 @@ public class TimelineFragment extends ListFragment {
 
         getActivity().setProgressBarIndeterminateVisibility(true);
 
+        getTunes();
+
+        return rootView;
+    }
+
+    private void getTunes() {
         ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
         query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+        query.setMaxCacheAge(TimeUnit.HOURS.toHours(3));
         query.include("parent");
         query.findInBackground(new FindCallback<Tunes>() {
             @Override
@@ -65,8 +74,6 @@ public class TimelineFragment extends ListFragment {
                 }
             }
         });
-
-        return rootView;
     }
 
     @Override

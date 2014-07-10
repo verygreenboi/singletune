@@ -3,7 +3,6 @@ package com.pixel.singletune.app.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -25,7 +24,6 @@ import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.helpers.FileHelper;
 import com.pixel.singletune.app.subClasses.Tunes;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 /**
  * Created by mrsmith on 5/26/14.
@@ -45,10 +43,17 @@ public class SendTuneActivity extends Activity {
     protected String title;
     protected String caption;
 
+    //Setup broadcast identifier and intent
+    public static final String BROADCAST_UPLOAD = "com.pixel.singletune.app.broadcastupload";
+    protected Intent mSendTuneIntent;
+
+
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_sendtune);
+
+        mSendTuneIntent = new Intent(BROADCAST_UPLOAD);
 
         mMediaUri = getIntent().getData();
         mFileType = getIntent().getExtras().getString(ParseConstants.KEY_FILE_TYPE);
@@ -69,21 +74,21 @@ public class SendTuneActivity extends Activity {
             }
         });
     }
-
-    public class CropSquareTransformation implements Transformation {
-        @Override public Bitmap transform(Bitmap source) {
-            int size = Math.min(source.getWidth(), source.getHeight());
-            int x = (source.getWidth() - size) / 2;
-            int y = (source.getHeight() - size) / 2;
-            Bitmap result = Bitmap.createBitmap(source, x, y, size, size);
-            if (result != source) {
-                source.recycle();
-            }
-            return result;
-        }
-
-        @Override public String key() { return "square()"; }
-    }
+//
+//    public class CropSquareTransformation implements Transformation {
+//        @Override public Bitmap transform(Bitmap source) {
+//            int size = Math.min(source.getWidth(), source.getHeight());
+//            int x = (source.getWidth() - size) / 2;
+//            int y = (source.getHeight() - size) / 2;
+//            Bitmap result = Bitmap.createBitmap(source, x, y, size, size);
+//            if (result != source) {
+//                source.recycle();
+//            }
+//            return result;
+//        }
+//
+//        @Override public String key() { return "square()"; }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -169,6 +174,10 @@ public class SendTuneActivity extends Activity {
         file.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
+
+                mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "1");
+                sendBroadcast(mSendTuneIntent);
+
                 tune.setSongFile(file);
                 tune.setFileType(mFileType);
                 if (artMediaUri != null){
@@ -181,6 +190,8 @@ public class SendTuneActivity extends Activity {
                 tune.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
+                        mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "0");
+                        sendBroadcast(mSendTuneIntent);
                         Log.d(TAG, "Done saving tune");
                     }
                 });

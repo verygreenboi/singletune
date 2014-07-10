@@ -25,6 +25,7 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.pixel.singletune.app.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
 
     <application
         android:name=".SingleTuneApplication"

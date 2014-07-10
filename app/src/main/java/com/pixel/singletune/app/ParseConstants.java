@@ -34,6 +34,8 @@ public final class ParseConstants {
     public static final String BROADCAST_ACTION = "com.pixel.singletune.app.BROADCAST";
     public static final String EXTENDED_DATA_STATUS = "com.pixel.singletune.app.STATUS";
     public static final String EXTENDED_STATUS_LOG = "com.pixel.singletune.app.LOG";
+
+    public static final  String KEY_UPLOADING = "Uploading";
     /*
      * A user-agent string that's sent to the HTTP site. It includes information about the device
      * and the build that the device is running.

@@ -11,8 +11,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.services.PlaySongService;
 import com.pixel.singletune.app.subClasses.Tunes;
@@ -29,6 +36,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
     protected List<Tunes> mTunes;
     protected boolean isMusicPlaying = false;
     protected boolean isOnline;
+    protected boolean isLiked = false;
 
     public TuneAdapter(Context context, List<Tunes> tunes) {
         super(context, R.layout.tune_item, tunes);
@@ -47,6 +55,12 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
             holder.artist = (TextView) convertView.findViewById(R.id.tuneListViewArtist);
             holder.title = (TextView) convertView.findViewById(R.id.tuneListViewTitle);
             holder.btnPlay = (ImageButton) convertView.findViewById(R.id.btnPlay);
+            holder.like_count = (TextView) convertView.findViewById(R.id.tuneLikeCountTextView);
+            holder.comment_count = (TextView) convertView.findViewById(R.id.tuneCommentCountTextView);
+            holder.download_count = (TextView) convertView.findViewById(R.id.tuneDownloadCountTextView);
+            holder.ic_tune_like = (ImageView) convertView.findViewById(R.id.ic_tune_like);
+            holder.like_text = (TextView) convertView.findViewById(R.id.TuneLikeTextView);
+            holder.tune_progress =(ProgressBar) convertView.findViewById(R.id.tuneBufferProgress);
 
             convertView.setTag(holder);
         } else {
@@ -55,7 +69,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
 
         // Get current tune
 
-        Tunes tunes = mTunes.get(position);
+        final Tunes tunes = mTunes.get(position);
         String username = tunes.getArtist().getUsername();
 
         try {
@@ -93,13 +107,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
                         stopMusic();
                         playMusic(tuneURL, position);
                     } else {
-                        AlertDialog.Builder ad = new AlertDialog.Builder(getContext());
-                        ad.setMessage(R.string.not_connected_error_message)
-                                .setTitle(R.string.not_connected_error_title)
-                                .setPositiveButton(android.R.string.ok, null);
-                        AlertDialog dialog = ad.create();
-                        holder.btnPlay.setImageResource(R.drawable.btn_play);
-                        dialog.show();
+                        ab(holder);
                     }
 
                 } else {
@@ -110,8 +118,101 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
             }
         });
 
+        /*
+         *  Tune meta area
+         */
+
+        // Get like
+
+        getLike(holder, tunes);
+
+        // Get like count
+        getLikeCount(holder, tunes);
+
+        // Like action
+
+        likeAction(holder, tunes);
 
         return convertView;
+    }
+
+    private void likeAction(final ViewHolder holder, final Tunes tunes) {
+        holder.like_text.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.tune_progress.setVisibility(View.VISIBLE);
+                if (!isLiked){
+                    tunes.increaseLike(1);
+                    tunes.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            holder.tune_progress.setVisibility(View.INVISIBLE);
+                            isLiked = true;
+                            holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like_pressed);
+                            getLikeCount(holder, tunes);
+                        }
+                    });
+                }
+                else {
+                    tunes.reduceLike(1);
+                    tunes.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            holder.tune_progress.setVisibility(View.INVISIBLE);
+                            isLiked = false;
+                            holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like);
+                            getLikeCount(holder, tunes);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void getLikeCount(final ViewHolder holder, Tunes tunes) {
+        ParseQuery<Tunes> cQuery = ParseQuery.getQuery(Tunes.class);
+        cQuery.whereEqualTo("objectId", tunes.getObjectId().toString());
+        cQuery.getFirstInBackground( new GetCallback<Tunes>() {
+            @Override
+            public void done(Tunes tunes, ParseException e) {
+                if (e == null){
+                    try {
+                        holder.like_count.setText(String.valueOf(tunes.getLikeCount()));
+                    }
+                    catch (Exception ce){
+                        ce.printStackTrace();
+                        holder.like_count.setText("0");
+                    }
+                }
+            }
+        });
+    }
+
+    private void ab(ViewHolder holder) {
+        AlertDialog.Builder ad = new AlertDialog.Builder(getContext());
+        ad.setMessage(R.string.not_connected_error_message)
+                .setTitle(R.string.not_connected_error_title)
+                .setPositiveButton(android.R.string.ok, null);
+        AlertDialog dialog = ad.create();
+        holder.btnPlay.setImageResource(R.drawable.btn_play);
+        dialog.show();
+    }
+
+    private void getLike(final ViewHolder holder, Tunes tunes) {
+        ParseQuery<ParseObject> lQuery = ParseQuery.getQuery("Activities");
+        lQuery.whereEqualTo("from", ParseUser.getCurrentUser().getObjectId());
+        lQuery.whereEqualTo("to", tunes.getArtist().getObjectId());
+        lQuery.whereEqualTo("activity", "like");
+        lQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject lObject, ParseException e) {
+                if (e == null) {
+                    // record found
+                    isLiked = true;
+                    holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like_pressed);
+                }
+            }
+        });
     }
 
     private void playMusic(String tuneURL, int p) {
@@ -126,14 +227,6 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         getContext().stopService(mServiceIntent);
     }
 
-
-    public static class ViewHolder {
-        ImageView tuneArt;
-        TextView title;
-        TextView artist;
-        ImageButton btnPlay;
-    }
-
     private void checkConnectivity() {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
@@ -143,5 +236,18 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         } else {
             isOnline = false;
         }
+    }
+
+    public static class ViewHolder {
+        ImageView tuneArt;
+        TextView title;
+        TextView artist;
+        ImageButton btnPlay;
+        TextView like_count;
+        TextView like_text;
+        TextView comment_count;
+        TextView download_count;
+        ImageView ic_tune_like;
+        ProgressBar tune_progress;
     }
 }
