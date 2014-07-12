@@ -16,10 +16,10 @@ public class StringArrayAdapter extends BaseAdapter {
     Context context;
     LayoutInflater listItemInflater;
 
-    public StringArrayAdapter(String[] objects, Context c){
+    public StringArrayAdapter(String[] objects, Context c) {
         usernames = objects;
         context = c;
-        listItemInflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        listItemInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -39,9 +39,9 @@ public class StringArrayAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view == null)
-            view = listItemInflater.inflate(android.R.layout.simple_list_item_1, viewGroup,false);
-        TextView username = (TextView)view.findViewById(android.R.id.text1);
+        if (view == null)
+            view = listItemInflater.inflate(android.R.layout.simple_list_item_1, viewGroup, false);
+        TextView username = (TextView) view.findViewById(android.R.id.text1);
         username.setText(usernames[i]);
         return view;
     }

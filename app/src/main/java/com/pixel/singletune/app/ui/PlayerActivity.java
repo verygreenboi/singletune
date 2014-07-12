@@ -40,7 +40,6 @@ public class PlayerActivity extends Activity implements MediaPlayer.OnCompletion
     private MediaPlayer mp;
     // Handler to update UI timer, progress bar etc,.
     private Handler mHandler = new Handler();
-    ;
     private SongsManager songManager;
     private Utilities utils;
     private int seekForwardTime = 5000; // 5000 milliseconds
@@ -334,7 +333,7 @@ public class PlayerActivity extends Activity implements MediaPlayer.OnCompletion
             songCurrentDurationLabel.setText("" + utils.milliSecondsToTimer(currentDuration));
 
             // Updating progress bar
-            int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
+            int progress = utils.getProgressPercentage(currentDuration, totalDuration);
             //Log.d("Progress", ""+progress);
             songProgressBar.setProgress(progress);
 
@@ -420,10 +419,7 @@ public class PlayerActivity extends Activity implements MediaPlayer.OnCompletion
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -32,10 +32,8 @@ public class PlayListActivity extends ListActivity {
         this.songsList = plm.getPlayList();
 
         // looping through playlist
-        for (int i = 0; i < songsList.size(); i++) {
+        for (HashMap<String, String> song : songsList) {
             // creating new HashMap
-            HashMap<String, String> song = songsList.get(i);
-
             // adding HashList to ArrayList
             songsListData.add(song);
         }

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,17 +35,46 @@ public class TimelineFragment extends ListFragment {
     boolean mBufferBroadcastIsRegistered;
 
     protected List<Tunes> mTunes;
+    protected SwipeRefreshLayout mSwipeRefreshLayout;
+    private static Parcelable mListViewScrollPos = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
 
-        getActivity().setProgressBarIndeterminateVisibility(true);
-
         getTunes();
 
+        getActivity().setProgressBarIndeterminateVisibility(true);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(OnRefreshListener);
+        mSwipeRefreshLayout.setColorScheme(
+                R.color.swipeRefresh1,
+                R.color.swipeRefresh2,
+                R.color.swipeRefresh3,
+                R.color.swipeRefresh4
+        );
+
+        Log.i(TAG, "OnCreateView");
+
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Restore Position
+        if (mListViewScrollPos != null) {
+            getListView().onRestoreInstanceState(mListViewScrollPos);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save the ListView position
+        mListViewScrollPos = getListView().onSaveInstanceState();
     }
 
     private void getTunes() {
@@ -55,6 +86,9 @@ public class TimelineFragment extends ListFragment {
         query.findInBackground(new FindCallback<Tunes>() {
             @Override
             public void done(List<Tunes> tunes, ParseException e) {
+                if (mSwipeRefreshLayout.isRefreshing()){
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
                 try {
                     getActivity().setProgressBarIndeterminateVisibility(false);
                 } catch (Exception err) {
@@ -63,12 +97,6 @@ public class TimelineFragment extends ListFragment {
 
                 if (e == null){
                     mTunes = tunes;
-                    String[] usernames = new String[mTunes.size()];
-
-                    int i = 0;
-                    for (Tunes tune : mTunes){
-                        usernames[i] = tune.getString(ParseConstants.KEY_USER_ID);
-                    }
                     TuneAdapter adapter = new TuneAdapter(getListView().getContext(), mTunes);
                     setListAdapter(adapter);
                 }
@@ -79,12 +107,12 @@ public class TimelineFragment extends ListFragment {
     @Override
     public void onResume(){
         super.onResume();
-
-
+        Log.i(TAG, "OnResume");
         // Register BCASTreceiver
 
         if (!mBufferBroadcastIsRegistered) {
-            getActivity().registerReceiver(broadcastBufferReceiver, new IntentFilter(PlaySongService.BROADCAST_BUFFER));
+            getActivity().registerReceiver(broadcastBufferReceiver,
+                    new IntentFilter(PlaySongService.BROADCAST_BUFFER));
             mBufferBroadcastIsRegistered = true;
         }
     }
@@ -95,7 +123,15 @@ public class TimelineFragment extends ListFragment {
             getActivity().unregisterReceiver(broadcastBufferReceiver);
             mBufferBroadcastIsRegistered = false;
         }
+
+        Log.i(TAG, "OnPause");
         super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG, "OnDestroyView");
     }
 
     private void showPD(Intent bufferIntent) {
@@ -108,14 +144,12 @@ public class TimelineFragment extends ListFragment {
 
     private void ActivityCircle(int p, int actionCode) {
         // Wanted position
-        int wp = p;
         // 1st position
         int fp = getListView().getFirstVisiblePosition() - getListView().getHeaderViewsCount();
         // Wanted child
-        int wc = wp - fp;
+        int wc = p - fp;
         if (wc < 0 || wc >= getListView().getChildCount()) {
             Log.w(TAG, "Unable to get view for desired position, because it's not being displayed on screen.");
-            return;
         } else {
             ProgressBar pb;
             View wv = getListView().getChildAt(wc);
@@ -138,6 +172,13 @@ public class TimelineFragment extends ListFragment {
         @Override
         public void onReceive(Context context, Intent bufferIntent) {
             showPD(bufferIntent);
+        }
+    };
+
+    protected SwipeRefreshLayout.OnRefreshListener OnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            getTunes();
         }
     };
 

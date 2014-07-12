@@ -3,7 +3,7 @@
     <item
         android:id="@android:id/background"
         android:drawable="@drawable/img_seekbar_bg"
-        android:dither="true"></item>
+        android:dither="true"/>
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>

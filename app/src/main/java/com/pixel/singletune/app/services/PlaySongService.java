@@ -252,7 +252,7 @@ public class PlaySongService extends Service
                 .build();
         noti.flags = Notification.FLAG_ONGOING_EVENT;
 
-        NotificationManager nm = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+        NotificationManager nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         nm.notify(0, noti);
     }
 

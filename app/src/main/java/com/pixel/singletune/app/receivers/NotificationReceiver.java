@@ -87,7 +87,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setSound(alarmSound)
                 .build();
 
-        NotificationManager nm = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
+        NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(0, noti);
     }
 

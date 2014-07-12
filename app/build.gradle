@@ -8,7 +8,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 6
+        versionCode 7
         versionName "1.0.11"
     }
     signingConfigs {
@@ -46,7 +46,6 @@ dependencies {
     compile 'com.android.support:gridlayout-v7:19.0.1'
     compile 'com.android.support:mediarouter-v7:19.0.1'
     compile 'com.android.support:support-v13:19.0.1'
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:extra-abc:+'
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
     compile 'com.jakewharton:butterknife:5.0.0'
     compile 'com.squareup.picasso:picasso:2.2.0'
@@ -63,6 +62,8 @@ dependencies {
     compile 'com.github.gabrielemariotti.cards:library-extra:1.7.0'
 
     compile files('libs/Parse-1.5.0.jar')
+
+
 }
 
 

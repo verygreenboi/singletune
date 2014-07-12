@@ -11,12 +11,12 @@ import java.util.List;
 /**
  * Created by mrsmith on 4/26/14.
  */
-public class customListAdapter extends BaseAdapter{
+public class customListAdapter extends BaseAdapter {
 
     private LayoutInflater mLayoutInflater;
     private List mData;
 
-    public customListAdapter(Context context, List data){
+    public customListAdapter(Context context, List data) {
         mData = data;
         mLayoutInflater = LayoutInflater.from(context);
     }

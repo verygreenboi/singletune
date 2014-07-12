@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 public class SongsManager {
     // SDCard Path
-    final String MEDIA_PATH = new String("/sdcard/");
+    final String MEDIA_PATH = "/sdcard/";
     private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
 
     // Constructor

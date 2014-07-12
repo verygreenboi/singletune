@@ -9,7 +9,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.utils.MD5Util;
@@ -25,7 +24,7 @@ public class UserAdapter extends ArrayAdapter<ParseUser> {
     protected Context mContext;
     protected List<ParseUser> mParseUsers;
 
-    public UserAdapter(Context context, List<ParseUser> users){
+    public UserAdapter(Context context, List<ParseUser> users) {
         super(context, R.layout.user_item, users);
         mContext = context;
         mParseUsers = users;
@@ -36,7 +35,7 @@ public class UserAdapter extends ArrayAdapter<ParseUser> {
 
         ViewHolder holder;
 
-        if (convertView == null){
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater.from(mContext));
             convertView = inflater.inflate(R.layout.user_item, parent, false);
             holder = new ViewHolder();
@@ -44,9 +43,8 @@ public class UserAdapter extends ArrayAdapter<ParseUser> {
             holder.selectedAvatar = (ImageView) convertView.findViewById(R.id.selectedAvatarImageView);
             holder.usernameLabel = (TextView) convertView.findViewById(R.id.usernameLabel);
             convertView.setTag(holder);
-        }
-        else {
-            holder = (ViewHolder)convertView.getTag();
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
 
@@ -54,21 +52,19 @@ public class UserAdapter extends ArrayAdapter<ParseUser> {
 
         String email = user.getEmail().toLowerCase();
 
-        if(email.equals("")){
+        if (email.equals("")) {
             holder.avatar.setImageResource(R.drawable.default_avatar);
-        }
-        else{
+        } else {
             String hash = MD5Util.md5Hex(email);
-            String gravatarUrl = "http://www.gravatar.com/avatar/"+ hash + "?s=272&d=404";
+            String gravatarUrl = "http://www.gravatar.com/avatar/" + hash + "?s=272&d=404";
             Picasso.with(mContext).load(gravatarUrl).placeholder(R.drawable.default_avatar).into(holder.avatar);
         }
         holder.usernameLabel.setText(user.getUsername());
 
-        GridView gridView = (GridView)parent;
-        if(gridView.isItemChecked(position)){
+        GridView gridView = (GridView) parent;
+        if (gridView.isItemChecked(position)) {
             holder.selectedAvatar.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
 
             holder.selectedAvatar.setVisibility(View.INVISIBLE);
         }
@@ -79,15 +75,14 @@ public class UserAdapter extends ArrayAdapter<ParseUser> {
     }
 
 
-
     //
-    private static class ViewHolder{
+    private static class ViewHolder {
         ImageView avatar;
         ImageView selectedAvatar;
         TextView usernameLabel;
     }
 
-    public void refill(List<ParseUser> users){
+    public void refill(List<ParseUser> users) {
         mParseUsers.clear();
         mParseUsers.addAll(users);
         notifyDataSetChanged();
