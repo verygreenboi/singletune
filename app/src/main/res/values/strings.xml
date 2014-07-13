@@ -86,5 +86,8 @@
     <string name="tune_comment_text">Comment</string>
     <string name="tune_download_text">Download</string>
     <string name="tune_like_count">0</string>
+    <string name="title_facebook_login">Facebook Login</string>
+    <string name="title_activity_fbregister">Complete Your Registration</string>
+    <string name="complete_registration">Complete Registration</string>
 
 </resources>

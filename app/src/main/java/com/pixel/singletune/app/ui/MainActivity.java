@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.newrelic.agent.android.NewRelic;
 import com.parse.ParseAnalytics;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
@@ -183,10 +184,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         ParseUser currentUser = ParseUser.getCurrentUser();
 
-        if (currentUser == null) {
+        if ((currentUser == null)|| !ParseFacebookUtils.isLinked(currentUser)) {
             navigateToLogin();
         } else {
-            Log.i(TAG, currentUser.getUsername());
+//            Log.i(TAG, currentUser.getUsername());
         }
 
 

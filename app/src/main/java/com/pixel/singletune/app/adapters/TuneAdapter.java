@@ -35,7 +35,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
     protected List<Tunes> mTunes;
     protected boolean isMusicPlaying = false;
     protected boolean isOnline;
-    protected boolean isLiked;
+    protected boolean isLiked = false;
     private int lastPosition = -1;
 
     public TuneAdapter(Context context, List<Tunes> tunes) {
@@ -124,21 +124,11 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
             @Override
             public void onClick(View view) {
 
-                /*
-                 *   Creates a new Intent to start IntentService
-                 *
-                 */
-
                 if (!isMusicPlaying) {
                     holder.btnPlay.setImageResource(R.drawable.btn_pause);
                     isMusicPlaying = true;
-                    checkConnectivity();
-                    if (isOnline) {
-                        stopMusic();
-                        playMusic(tuneURL, position);
-                    } else {
-                        ab(holder);
-                    }
+                    stopMusic();
+                    playMusic(tuneURL, position);
 
                 } else {
                     isMusicPlaying = false;
@@ -275,9 +265,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
 
     private void checkConnectivity() {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        isOnline = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-                .isConnectedOrConnecting() || cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-                .isConnectedOrConnecting();
+        isOnline = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting()|| cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting() || cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isAvailable();
     }
 
     public static class ViewHolder {

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:paddingBottom="32dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="670dp"
+        android:id="@+id/tuneImage"
+        android:contentDescription="@string/tune_listView_image"
+        android:src="@drawable/tune_placeholder"
+        style="@style/GridImage"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/alpha_deep_blue"
+        android:orientation="horizontal"
+        android:layout_alignBottom="@+id/tuneImage"
+        android:id="@+id/tuneTitleLayout">
+
+        <ImageButton
+            android:id="@+id/btnPlay"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="fitCenter"
+            android:background="@color/tune_ic_bg_blue"
+            android:src="@drawable/btn_play" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tuneListViewTitle"
+                android:textSize="24sp"
+                android:textColor="@android:color/white"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:text="@string/tune_listview_title" />
+
+            <TextView
+                android:id="@+id/tuneListViewArtist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:paddingLeft="16dp"
+                android:text="@string/tune_listview_artist" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:layout_marginTop="8dp"
+            android:id="@+id/tuneBufferProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/tune_action_meta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tuneTitleLayout"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/like_meta_horizontal_margin"
+        android:layout_marginBottom="@dimen/like_meta_horizontal_margin"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:background="@android:color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tune_like_count"
+            android:id="@+id/tuneLikeCountTextView"
+            android:layout_marginLeft="8dp"
+            style="@style/linkText.count" />
+
+        <TextView
+            android:id="@+id/TuneLikeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tune_like_textView_label"
+            android:layout_marginLeft="4dp"
+            style="@style/linkText" />
+
+        <ImageView
+            android:id="@+id/ic_tune_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/ic_tune_meta_like" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tune_like_count"
+            android:id="@+id/tuneCommentCountTextView"
+            android:layout_marginLeft="12dp"
+            style="@style/linkText.count" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/TuneCommentTextView"
+            android:text="@string/tune_comment_text"
+            android:layout_marginLeft="4dp"
+            style="@style/linkText" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/ic_tune_meta_comment" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tune_like_count"
+            android:id="@+id/tuneDownloadCountTextView"
+            android:layout_marginLeft="12dp"
+            style="@style/linkText.count" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/TuneDownloadTextView"
+            android:text="@string/tune_download_text"
+            android:layout_marginLeft="4dp"
+            style="@style/linkText" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+

@@ -3,9 +3,11 @@ package com.pixel.singletune.app.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,11 +15,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.model.GraphUser;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
+import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.SingleTuneApplication;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class LoginActivity extends Activity {
 
@@ -25,6 +37,7 @@ public class LoginActivity extends Activity {
     protected EditText mUsername;
     protected EditText mPassword;
     protected Button mLoginButton;
+    protected Button mFBLoginButton;
 
     protected TextView mSignupTextView;
     private ProgressDialog progressDialog;
@@ -56,6 +69,14 @@ public class LoginActivity extends Activity {
         mUsername = (EditText) findViewById(R.id.login_username_field);
         mPassword = (EditText) findViewById(R.id.login_password_field);
         mLoginButton = (Button) findViewById(R.id.login_button);
+        mFBLoginButton = (Button)findViewById(R.id.fbLoginButton);
+
+        mFBLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onLoginButtonClicked();
+            }
+        });
 
         // Login user
 
@@ -94,10 +115,7 @@ public class LoginActivity extends Activity {
                                 // Associate the device with a user
                                 SingleTuneApplication.UpdateParseInstallation(user);
 
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
+                                showMainActivity(MainActivity.class);
                             } else {
                                  /* TODO Clean up returned error message */
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -116,6 +134,43 @@ public class LoginActivity extends Activity {
             }
         });
 
+    }
+
+    private void showMainActivity(Class c) {
+        Intent intent = new Intent(this, c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+    }
+
+    private void onLoginButtonClicked() {
+        LoginActivity.this.progressDialog = ProgressDialog.show(
+                LoginActivity.this, "", "Logging in...", true);
+        List<String> permissions = Arrays.asList("basic_info", "user_about_me",
+                "user_relationships", "user_birthday", "user_location");
+        ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException err) {
+                LoginActivity.this.progressDialog.dismiss();
+                if (user == null) {
+                    Log.d(SingleTuneApplication.TAG,
+                            "Uh oh. The user cancelled the Facebook login.");
+                } else if (user.isNew()) {
+                    Log.d(SingleTuneApplication.TAG,
+                            "User signed up and logged in through Facebook!");
+                } else {
+                    Log.d(SingleTuneApplication.TAG,
+                            "User logged in through Facebook!");
+                    showMainActivity(FBRegister.class);
+                }
+            }
+        });
     }
 
     public void FontifyTextView(String font, TextView tv) {

@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 7
-        versionName "1.0.11"
+        versionCode 8
+        versionName "1.0.12"
     }
     signingConfigs {
         releaseConfig {
@@ -61,7 +61,16 @@ dependencies {
     //Extra card library, it is required only if you want to use integrations with other libraries
     compile 'com.github.gabrielemariotti.cards:library-extra:1.7.0'
 
+    // Glass Actionbar
+    compile 'com.github.manuelpeinado.glassactionbar:glassactionbar:0.3.0'
+    compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2'
+
     compile files('libs/Parse-1.5.0.jar')
+
+    // Projects
+    //    compile project('libraries:fa')
+    compile project('libraries:facebook')
+//    compile project('libraries:ParseUI')
 
 
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -16,6 +15,7 @@ import android.widget.ProgressBar;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
@@ -36,14 +36,11 @@ public class TimelineFragment extends ListFragment {
 
     protected List<Tunes> mTunes;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
-    private static Parcelable mListViewScrollPos = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
-
-        getTunes();
 
         getActivity().setProgressBarIndeterminateVisibility(true);
 
@@ -56,25 +53,7 @@ public class TimelineFragment extends ListFragment {
                 R.color.swipeRefresh4
         );
 
-        Log.i(TAG, "OnCreateView");
-
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // Restore Position
-        if (mListViewScrollPos != null) {
-            getListView().onRestoreInstanceState(mListViewScrollPos);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save the ListView position
-        mListViewScrollPos = getListView().onSaveInstanceState();
     }
 
     private void getTunes() {
@@ -107,7 +86,10 @@ public class TimelineFragment extends ListFragment {
     @Override
     public void onResume(){
         super.onResume();
-        Log.i(TAG, "OnResume");
+
+        getTunes();
+
+
         // Register BCASTreceiver
 
         if (!mBufferBroadcastIsRegistered) {
@@ -181,5 +163,7 @@ public class TimelineFragment extends ListFragment {
             getTunes();
         }
     };
+
+
 
 }

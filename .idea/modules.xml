@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidBootstrap/AndroidBootstrap.iml" filepath="$PROJECT_DIR$/AndroidBootstrap/AndroidBootstrap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SinglTeune.iml" filepath="$PROJECT_DIR$/SinglTeune.iml" />
       <module fileurl="file://$PROJECT_DIR$/SingleTune.iml" filepath="$PROJECT_DIR$/SingleTune.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/facebook/facebook.iml" filepath="$PROJECT_DIR$/facebook/facebook.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/libraries/facebook/facebook.iml" filepath="$PROJECT_DIR$/app/libraries/facebook/facebook.iml" />
     </modules>
   </component>
 </project>

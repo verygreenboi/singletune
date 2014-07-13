@@ -25,7 +25,7 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.pixel.singletune.app.permission.C2D_MESSAGE" />
-    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
 
     <application
         android:name=".SingleTuneApplication"
@@ -49,6 +49,10 @@
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login" />
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="@string/title_facebook_login" >
+        </activity>
         <activity
             android:name=".ui.SignupActivity"
             android:label="@string/title_activity_signup"
@@ -138,12 +142,16 @@
         <service
             android:name=".services.PlaySongService"
             android:exported="false" />
-
         <service
             android:name=".services.songUploadService"
             android:enabled="true"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".ui.FBRegister"
+            android:label="@string/title_activity_fbregister" >
+        </activity>
     </application>
 
 </manifest>
