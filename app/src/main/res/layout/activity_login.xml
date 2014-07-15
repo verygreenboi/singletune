@@ -19,9 +19,9 @@
             android:layout_alignBottom="@+id/appTitle"
             android:layout_toLeftOf="@+id/appTitle" />
 
-        <TextView
+        <com.pixel.singletune.app.utils.CustomTextView
             android:id="@+id/appTitle"
-            style="@style/appTitle" />
+            style="@style/TitleText" />
 
         <TextView
             android:id="@+id/subtitle"

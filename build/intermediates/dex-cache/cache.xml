@@ -78,7 +78,7 @@
         jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/SinglTeune.app.libraries/facebook/unspecified/classes.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="01f2de312946a7130c928cb1da24e9c01479485a"/>
+        sha1="ba9d338f5d7106c0f0c09cb4359e1bb0d0b9a6a1"/>
     <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/rebound-0.3.3-1885030c2fa9616c769855cc36e16390fd899cda.jar"
         jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.facebook.rebound/rebound/0.3.3/fde2c09c792e35c3c211cca31c557ad810617cbf/rebound-0.3.3.jar"

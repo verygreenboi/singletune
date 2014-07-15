@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.pixel.singletune.app.R;
+import com.pixel.singletune.app.helpers.FileHelper;
 import com.pixel.singletune.app.utils.MD5Util;
 import com.squareup.picasso.Picasso;
 
@@ -40,7 +41,15 @@ public class ProfileActivity extends Activity {
         mCurrentUser = ParseUser.getCurrentUser();
         String userEmail = mCurrentUser.getEmail().toLowerCase();
 
-        if (userEmail.equals("")){
+        Boolean fbLinked = mCurrentUser.getBoolean("FBLinked");
+
+        if (fbLinked){
+            String fbID = mCurrentUser.getString("fbID");
+            String fbPicURL = FileHelper.getFacebookPicture(fbID);
+            Picasso.with(mContext).load(fbPicURL).placeholder(R.drawable.default_avatar).into(mProfileAvatar);
+        }
+
+        else if (userEmail.equals("")){
             mProfileAvatar.setImageResource(R.drawable.default_avatar);
         }
         else {

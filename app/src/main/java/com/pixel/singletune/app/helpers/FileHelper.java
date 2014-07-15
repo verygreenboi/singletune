@@ -99,16 +99,10 @@ public class FileHelper {
         return fileName;
     }
 
-    public static Bitmap getFacebookPicture(String userID){
+    public static String getFacebookPicture(String userID){
         String imgURL = String.format(
-                "https://graph.facebook.com/%s/picture",
+                "https://graph.facebook.com/%s/picture?type=large",
                 userID);
-        try {
-            mInputStream = new URL(imgURL).openStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Bitmap bitmap = BitmapFactory.decodeStream(mInputStream);
-        return bitmap;
+        return imgURL;
     }
 }

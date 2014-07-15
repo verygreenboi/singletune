@@ -44,11 +44,11 @@ public class LoginActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
 
-        String fontPath = "fonts/Megrim.ttf";
-
-        TextView title = (TextView) findViewById(R.id.appTitle);
-
-        FontifyTextView(fontPath, title);
+//        String fontPath = "fonts/Megrim.ttf";
+//
+//        TextView title = (TextView) findViewById(R.id.appTitle);
+//
+//        FontifyTextView(fontPath, title);
 
 
         mSignupTextView = (TextView) findViewById(R.id.signup_text_field);
@@ -168,12 +168,12 @@ public class LoginActivity extends Activity {
         });
     }
 
-    public void FontifyTextView(String font, TextView tv) {
-        // Font path
-
-        Typeface tf = Typeface.createFromAsset(getAssets(), font);
-
-        tv.setTypeface(tf);
-    }
+//    public void FontifyTextView(String font, TextView tv) {
+//        // Font path
+//
+//        Typeface tf = Typeface.createFromAsset(getAssets(), font);
+//
+//        tv.setTypeface(tf);
+//    }
 
 }

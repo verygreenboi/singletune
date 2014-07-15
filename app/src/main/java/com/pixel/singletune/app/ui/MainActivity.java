@@ -184,10 +184,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         ParseUser currentUser = ParseUser.getCurrentUser();
 
-        if ((currentUser == null)|| !ParseFacebookUtils.isLinked(currentUser)) {
+        if (currentUser == null) {
             navigateToLogin();
         } else {
-//            Log.i(TAG, currentUser.getUsername());
+            Log.i(TAG, currentUser.getUsername());
         }
 
 

@@ -95,8 +95,23 @@ public class FBRegister extends Activity {
                     // User data
                     mUserEmail = mGraphUser.getProperty("email").toString();
 
-                    // Animation
-                    animation();
+                    ParseQuery<ParseUser> checkUser = ParseUser.getQuery();
+                    checkUser.whereEqualTo("email", mUserEmail);
+                    checkUser.getFirstInBackground(new GetCallback<ParseUser>() {
+                        @Override
+                        public void done(ParseUser parseUser, ParseException e) {
+                            if (e == null) {
+                                showMainActivity(MainActivity.class);
+//                                Log.d("FBTAG", parseUser.getUsername());
+                            }
+                            else {
+                                e.printStackTrace();
+                                // Animation
+                                animation();
+                            }
+                        }
+                    });
+
 
                     Log.d("FBTAG", fName);
                     Log.d("FBTAG", mUserEmail);
@@ -108,6 +123,7 @@ public class FBRegister extends Activity {
             mMeRequest.executeAsync();
 
             Log.d("FBTAG", ParseFacebookUtils.getSession().getAccessToken().toString());
+
         }
         catch (Exception e){
             Toast.makeText(this, "Can't get current user", Toast.LENGTH_SHORT).show();
@@ -132,7 +148,7 @@ public class FBRegister extends Activity {
             public void onClick(View view) {
 
                 ParseQuery<ParseUser> checkUser = ParseQuery.getQuery("User");
-                checkUser.whereEqualTo("enail", mUserEmail);
+                checkUser.whereEqualTo("email", mUserEmail);
                 checkUser.getFirstInBackground(new GetCallback<ParseUser>() {
                     @Override
                     public void done(ParseUser parseUser, ParseException e) {
@@ -168,7 +184,7 @@ public class FBRegister extends Activity {
                                 dialog.show();
                             }
                             else {
-                                mCurrentUser.put("avatar", FileHelper.getFacebookPicture(mGraphUser.getId()));
+//                                mCurrentUser.put("avatar", FileHelper.getFacebookPicture(mGraphUser.getId()));
                                 mCurrentUser.setEmail(mUserEmail);
                                 mCurrentUser.setUsername(username);
                                 mCurrentUser.setPassword(password);
@@ -176,6 +192,8 @@ public class FBRegister extends Activity {
                                 mCurrentUser.put("Last_Name", mGraphUser.getLastName());
                                 mCurrentUser.put("FB_Link", mGraphUser.getLink());
                                 mCurrentUser.put("Birthday", mGraphUser.getBirthday());
+                                mCurrentUser.put("fbID", mGraphUser.getId());
+                                mCurrentUser.put("FBLinked", true);
 //                    mCurrentUser.put("Location", mGraphUser.getLocation());
 
                                 mCurrentUser.signUpInBackground(new SignUpCallback() {

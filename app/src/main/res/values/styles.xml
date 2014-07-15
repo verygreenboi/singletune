@@ -211,4 +211,16 @@
         <item name="android:drawablePadding">16dp</item>
         <item name="android:singleLine">true</item>
     </style>
+
+    <style name="TitleText" parent="@android:style/Widget.TextView">
+        <item name="com.pixel.singletune.app:font">fonts/Megrim.ttf</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/app_name</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">64dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>
