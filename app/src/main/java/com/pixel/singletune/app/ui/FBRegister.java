@@ -23,12 +23,15 @@ import android.widget.Toast;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.pixel.singletune.app.R;
+import com.pixel.singletune.app.helpers.FileHelper;
 
 public class FBRegister extends Activity {
 
@@ -128,79 +131,25 @@ public class FBRegister extends Activity {
             @Override
             public void onClick(View view) {
 
-                progressDialog = ProgressDialog.show(FBRegister.this, "",
-                        "Signing up...", true);
+                ParseQuery<ParseUser> checkUser = ParseQuery.getQuery("User");
+                checkUser.whereEqualTo("enail", mUserEmail);
+                checkUser.getFirstInBackground(new GetCallback<ParseUser>() {
+                    @Override
+                    public void done(ParseUser parseUser, ParseException e) {
+                        if (e==null){
+                            showMainActivity(MainActivity.class);
+                        }
+                        else {
+                            progressDialog = ProgressDialog.show(FBRegister.this, "",
+                                    "Signing up...", true);
 
-                //  Get Strings
-                String username = mUsernameField.getText().toString().toLowerCase();
-                String password = mPasswordField.getText().toString();
-                String confirmPassword = mPasswordConfirmationField.getText().toString();
-
-                if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(FBRegister.this);
-                    builder.setMessage(R.string.signup_error_message)
-                            .setTitle(R.string.title_signup_error)
-                            .setPositiveButton(android.R.string.ok, null);
-                    AlertDialog dialog = builder.create();
-                    // Close progress dialog
-                    progressDialog.dismiss();
-                    dialog.show();
-                }
-                else if (!password.equals(confirmPassword)){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(FBRegister.this);
-                    builder.setMessage(R.string.signup_password_mismatch_message)
-                            .setTitle(R.string.title_signup_error)
-                            .setPositiveButton(android.R.string.ok, null);
-                    AlertDialog dialog = builder.create();
-                    // Close progress dialog
-                    progressDialog.dismiss();
-                    dialog.show();
-                }
-                else {
-                    mCurrentUser.setEmail(mUserEmail);
-                    mCurrentUser.setUsername(username);
-                    mCurrentUser.setPassword(password);
-                    mCurrentUser.put("First_Name", mGraphUser.getFirstName());
-                    mCurrentUser.put("Last_Name", mGraphUser.getLastName());
-                    mCurrentUser.put("FB_Link", mGraphUser.getLink());
-                    mCurrentUser.put("Birthday", mGraphUser.getBirthday());
-//                    mCurrentUser.put("Location", mGraphUser.getLocation());
-
-                    mCurrentUser.signUpInBackground(new SignUpCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                if (!ParseFacebookUtils.isLinked(mCurrentUser)) {
-                                    ParseFacebookUtils.link(mCurrentUser, FBRegister.this, new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-
-                                            showMainActivity(MainActivity.class);
-//                                            if (e == null) {
-//
-//                                                // Close progress dialog
-//                                                progressDialog.dismiss();
-//                                                showMainActivity(MainActivity.class);
-//                                            }
-//                                            else {
-//                                                AlertDialog.Builder builder = new AlertDialog.Builder(FBRegister.this);
-//                                                builder.setMessage(e.getMessage())
-//                                                        .setTitle(R.string.title_signup_error)
-//                                                        .setPositiveButton(android.R.string.ok, null);
-//                                                AlertDialog dialog = builder.create();
-//                                                // Close progress dialog
-//                                                progressDialog.dismiss();
-//                                                dialog.show();
-//                                            }
-                                        }
-                                    });
-                                }else {
-                                    // is Linked
-                                    showMainActivity(MainActivity.class);
-                                }
-                            }else {
+                            //  Get Strings
+                            String username = mUsernameField.getText().toString().toLowerCase();
+                            String password = mPasswordField.getText().toString();
+                            String confirmPassword = mPasswordConfirmationField.getText().toString();
+                            if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
                                 AlertDialog.Builder builder = new AlertDialog.Builder(FBRegister.this);
-                                builder.setMessage(e.getMessage())
+                                builder.setMessage(R.string.signup_error_message)
                                         .setTitle(R.string.title_signup_error)
                                         .setPositiveButton(android.R.string.ok, null);
                                 AlertDialog dialog = builder.create();
@@ -208,11 +157,60 @@ public class FBRegister extends Activity {
                                 progressDialog.dismiss();
                                 dialog.show();
                             }
+                            else if (!password.equals(confirmPassword)){
+                                AlertDialog.Builder builder = new AlertDialog.Builder(FBRegister.this);
+                                builder.setMessage(R.string.signup_password_mismatch_message)
+                                        .setTitle(R.string.title_signup_error)
+                                        .setPositiveButton(android.R.string.ok, null);
+                                AlertDialog dialog = builder.create();
+                                // Close progress dialog
+                                progressDialog.dismiss();
+                                dialog.show();
+                            }
+                            else {
+                                mCurrentUser.put("avatar", FileHelper.getFacebookPicture(mGraphUser.getId()));
+                                mCurrentUser.setEmail(mUserEmail);
+                                mCurrentUser.setUsername(username);
+                                mCurrentUser.setPassword(password);
+                                mCurrentUser.put("First_Name", mGraphUser.getFirstName());
+                                mCurrentUser.put("Last_Name", mGraphUser.getLastName());
+                                mCurrentUser.put("FB_Link", mGraphUser.getLink());
+                                mCurrentUser.put("Birthday", mGraphUser.getBirthday());
+//                    mCurrentUser.put("Location", mGraphUser.getLocation());
+
+                                mCurrentUser.signUpInBackground(new SignUpCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+                                            if (!ParseFacebookUtils.isLinked(mCurrentUser)) {
+                                                ParseFacebookUtils.link(mCurrentUser, FBRegister.this, new SaveCallback() {
+                                                    @Override
+                                                    public void done(ParseException e) {
+
+                                                        showMainActivity(MainActivity.class);
+                                                    }
+                                                });
+                                            }else {
+                                                // is Linked
+                                                showMainActivity(MainActivity.class);
+                                            }
+                                        }else {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(FBRegister.this);
+                                            builder.setMessage(e.getMessage())
+                                                    .setTitle(R.string.title_signup_error)
+                                                    .setPositiveButton(android.R.string.ok, null);
+                                            AlertDialog dialog = builder.create();
+                                            // Close progress dialog
+                                            progressDialog.dismiss();
+                                            dialog.show();
+                                        }
+                                    }
+                                });
+
+                            }
                         }
-                    });
-
-                }
-
+                    }
+                });
             }
         });
     }
@@ -231,4 +229,6 @@ public class FBRegister extends Activity {
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+
+
 }

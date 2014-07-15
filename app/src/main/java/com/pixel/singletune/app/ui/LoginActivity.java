@@ -3,7 +3,6 @@ package com.pixel.singletune.app.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,16 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
-import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.SingleTuneApplication;
 
@@ -37,7 +31,7 @@ public class LoginActivity extends Activity {
     protected EditText mUsername;
     protected EditText mPassword;
     protected Button mLoginButton;
-    protected Button mFBLoginButton;
+    protected LoginButton mFBLoginButton;
 
     protected TextView mSignupTextView;
     private ProgressDialog progressDialog;
@@ -69,7 +63,7 @@ public class LoginActivity extends Activity {
         mUsername = (EditText) findViewById(R.id.login_username_field);
         mPassword = (EditText) findViewById(R.id.login_password_field);
         mLoginButton = (Button) findViewById(R.id.login_button);
-        mFBLoginButton = (Button)findViewById(R.id.fbLoginButton);
+        mFBLoginButton = (LoginButton)findViewById(R.id.fbLoginButton);
 
         mFBLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,6 +158,7 @@ public class LoginActivity extends Activity {
                 } else if (user.isNew()) {
                     Log.d(SingleTuneApplication.TAG,
                             "User signed up and logged in through Facebook!");
+                    showMainActivity(FBRegister.class);
                 } else {
                     Log.d(SingleTuneApplication.TAG,
                             "User logged in through Facebook!");

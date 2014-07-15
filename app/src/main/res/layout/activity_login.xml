@@ -83,15 +83,14 @@
         android:textColor="@android:color/white"
         android:textSize="12sp" />
 
-    <Button
+    <com.facebook.widget.LoginButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:id="@+id/fbLoginButton"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        style="@style/AuthButton"
-        android:text="Signup with Facebook"
-        android:background="@drawable/com_facebook_button_blue"
-        android:layout_alignParentBottom="true"/>
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_below="@+id/signup_text_field"/>
 </RelativeLayout>

@@ -1,6 +1,8 @@
 package com.pixel.singletune.app.helpers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
@@ -13,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Created by mrsmith on 5/28/14.
@@ -21,6 +24,8 @@ public class FileHelper {
     public static final String TAG = FileHelper.class.getSimpleName();
 
     public static final int SHORT_SIDE_TARGET = 1280;
+
+    public static InputStream mInputStream = null;
 
     public static byte[] getByteArrayFromFile(Context context, Uri uri){
 
@@ -92,5 +97,18 @@ public class FileHelper {
         }
 
         return fileName;
+    }
+
+    public static Bitmap getFacebookPicture(String userID){
+        String imgURL = String.format(
+                "https://graph.facebook.com/%s/picture",
+                userID);
+        try {
+            mInputStream = new URL(imgURL).openStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Bitmap bitmap = BitmapFactory.decodeStream(mInputStream);
+        return bitmap;
     }
 }
