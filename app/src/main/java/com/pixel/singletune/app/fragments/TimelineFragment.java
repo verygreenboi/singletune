@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
@@ -59,7 +58,7 @@ public class TimelineFragment extends ListFragment {
     private void getTunes() {
         ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
         query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
-        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.setMaxCacheAge(TimeUnit.HOURS.toHours(3));
         query.include("parent");
         query.findInBackground(new FindCallback<Tunes>() {

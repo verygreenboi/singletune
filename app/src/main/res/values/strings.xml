@@ -90,4 +90,6 @@
     <string name="title_activity_fbregister">Complete Your Registration</string>
     <string name="complete_registration">Complete Registration</string>
 
+    <string name="noCol">3</string>
+
 </resources>

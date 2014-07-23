@@ -65,7 +65,8 @@
             android:name=".ui.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:parentActivityName=".ui.MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TranslucentActionBar.ActionBar.Overlay">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/profileAvatarImageView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scaleType="centerCrop"
+    android:adjustViewBounds="true"
+    android:background="@drawable/profile_background"
+    android:contentDescription="@string/profile_image_desc"
+    android:src="@drawable/ic_action_user">
+
+</ImageView>

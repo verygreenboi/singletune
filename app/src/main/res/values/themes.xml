@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SingleTuneTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_singletune</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Singletune</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Singletune</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Singletune</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Singletune</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Singletune</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_singletune</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_singletune
+        </item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Singletune
+        </item>
+
+        <item name="android:editTextBackground">@drawable/singletune_edit_text_holo_light</item>
+
+        <item name="android:textColorHighlight">#994c8ab7</item>
+        <item name="android:textSelectHandleLeft">@drawable/singletune_text_select_handle_left
+        </item>
+        <item name="android:textSelectHandleRight">@drawable/singletune_text_select_handle_right
+        </item>
+        <item name="android:textSelectHandle">@drawable/singletune_text_select_handle_middle</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewsingleTune</item>
+
+        <item name="android:listChoiceIndicatorMultiple">@drawable/singletune_btn_check_holo_light
+        </item>
+
+        <item name="android:imageButtonStyle">@style/ImageButtonsingleTune</item>
+
+        <item name="android:dropDownSpinnerStyle">@style/SpinnersingleTune</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarsingleTune</item>
+
+    </style>
+
+    <style name="Theme.TranslucentActionBar" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/Widget.ActionBar</item>
+    </style>
+
+    <style name="Theme.TranslucentActionBar.ActionBar" />
+
+    <style name="Theme.TranslucentActionBar.ActionBar.Overlay">
+        <item name="android:actionBarStyle">@style/Widget.ActionBar.Transparent</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+</resources>

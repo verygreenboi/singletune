@@ -17,43 +17,6 @@
 -->
 
 <resources>
-
-    <style name="SingleTuneTheme" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_singletune
-        </item>
-        <item name="android:popupMenuStyle">@style/PopupMenu.Singletune</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Singletune</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Singletune</item>
-        <item name="android:actionDropDownStyle">@style/DropDownNav.Singletune</item>
-        <item name="android:actionBarStyle">@style/ActionBar.Solid.Singletune</item>
-        <item name="android:actionModeBackground">@drawable/cab_background_top_singletune</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_singletune
-        </item>
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Singletune
-        </item>
-
-        <item name="android:editTextBackground">@drawable/singletune_edit_text_holo_light</item>
-
-        <item name="android:textColorHighlight">#994c8ab7</item>
-        <item name="android:textSelectHandleLeft">@drawable/singletune_text_select_handle_left
-        </item>
-        <item name="android:textSelectHandleRight">@drawable/singletune_text_select_handle_right
-        </item>
-        <item name="android:textSelectHandle">@drawable/singletune_text_select_handle_middle</item>
-
-        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewsingleTune</item>
-
-        <item name="android:listChoiceIndicatorMultiple">@drawable/singletune_btn_check_holo_light
-        </item>
-
-        <item name="android:imageButtonStyle">@style/ImageButtonsingleTune</item>
-
-        <item name="android:dropDownSpinnerStyle">@style/SpinnersingleTune</item>
-
-        <item name="android:progressBarStyleHorizontal">@style/ProgressBarsingleTune</item>
-
-    </style>
-
     <style name="AutoCompleteTextViewsingleTune" parent="android:Widget.Holo.Light.AutoCompleteTextView">
         <item name="android:dropDownSelector">@drawable/singletune_list_selector_holo_light</item>
         <item name="android:background">@drawable/singletune_edit_text_holo_light</item>
@@ -125,7 +88,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:scaleType">fitXY</item>
+        <item name="android:scaleType">centerCrop</item>
         <item name="android:adjustViewBounds">true</item>
     </style>
 
@@ -221,6 +184,30 @@
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_marginTop">64dp</item>
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
+    <style name="Widget.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_background</item>
+    </style>
+
+    <style name="Widget.ActionBar.Transparent">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="tune_meta_label_style" parent="@android:style/Widget.TextView">
+        <item name="com.pixel.singletune.app:font">fonts/Raleway-ExtraLight.ttf</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Holo.Large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="tune_meta_count_style" parent="tune_meta_label_style">
+        <item name="com.pixel.singletune.app:font">fonts/Raleway-thin.ttf</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Holo.Medium</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
 </resources>

@@ -6,42 +6,68 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
+import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
+import com.parse.CountCallback;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
+import com.pixel.singletune.app.adapters.TunesGridAdapter;
 import com.pixel.singletune.app.helpers.FileHelper;
+import com.pixel.singletune.app.subClasses.Tunes;
+import com.pixel.singletune.app.utils.CustomTextView;
 import com.pixel.singletune.app.utils.MD5Util;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
+import static android.view.View.INVISIBLE;
 
 
 public class ProfileActivity extends Activity {
     protected ParseUser mCurrentUser;
     protected Context mContext = ProfileActivity.this;
-    @InjectView(R.id.edit_profile_button)
-    Button mEditProfileButton;
-    @InjectView(R.id.tune_count_meta) TextView mTuneCountMeta;
-    @InjectView(R.id.friends_count_meta) TextView mFriendsCountMeta;
-    @InjectView(R.id.followers_count_meta) TextView mFollowersCountMeta;
     @InjectView(R.id.profileAvatarImageView)
     ImageView mProfileAvatar;
+    protected GridView mGridView;
+    protected List<Tunes> mTunes;
+    protected ProgressBar mProgressBar;
+    protected CustomTextView mTuneCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+
+        FadingActionBarHelper helper = new FadingActionBarHelper()
+                .actionBarBackground(R.drawable.ab_background_textured_singletune)
+                .headerLayout(R.layout.profile_header)
+                .contentLayout(R.layout.profile_content);
+
+        setContentView(helper.createView(this));
+        helper.initActionBar(this);
+
+
         // Find various textviews to modify
         ButterKnife.inject(this);
+
 
         mCurrentUser = ParseUser.getCurrentUser();
         String userEmail = mCurrentUser.getEmail().toLowerCase();
 
         Boolean fbLinked = mCurrentUser.getBoolean("FBLinked");
+
+        // Set Header Image
 
         if (fbLinked){
             String fbID = mCurrentUser.getString("fbID");
@@ -57,7 +83,72 @@ public class ProfileActivity extends Activity {
             String gravatarUrl = "http://www.gravatar.com/avatar/"+ hash + "?s=272&d=404";
             Picasso.with(mContext).load(gravatarUrl).placeholder(R.drawable.default_avatar).into(mProfileAvatar);
         }
+        setTitle(mCurrentUser.getUsername());
 
+        //Instantiate GridView
+
+        mGridView = (GridView)findViewById(R.id.tune_grid);
+
+        mProgressBar = (ProgressBar)findViewById(R.id.pb_loading);
+
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        // Counts
+
+        mTuneCount = (CustomTextView)findViewById(R.id.tune_count);
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        // TuneCountQuery
+        tuneCountQuery();
+
+        // TuneQuery
+        tuneQuery();
+
+    }
+
+    private void tuneCountQuery() {
+        ParseQuery<Tunes> cQ = ParseQuery.getQuery(Tunes.class);
+        cQ.whereEqualTo("parent", mCurrentUser);
+        cQ.countInBackground(new CountCallback() {
+            @Override
+            public void done(int i, ParseException e) {
+                if (e == null){
+                    String count = String.valueOf(i);
+                    mTuneCount.setText(count);
+                }
+            }
+        });
+    }
+
+    private void tuneQuery() {
+        ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
+        query.whereEqualTo("parent", mCurrentUser);
+        query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setMaxCacheAge(TimeUnit.HOURS.toHours(1));
+        query.setLimit(12);
+        query.findInBackground(new FindCallback<Tunes>() {
+            @Override
+            public void done(List<Tunes> tunes, ParseException e) {
+
+                mProgressBar.setVisibility(INVISIBLE);
+
+                if (e == null){
+                    mTunes = tunes;
+                    if (mGridView.getAdapter() == null) {
+                        TunesGridAdapter adapter = new TunesGridAdapter(mContext, mTunes);
+                        mGridView.setAdapter(adapter);
+                    } else {
+                        ((TunesGridAdapter)mGridView.getAdapter()).refill(mTunes);
+                    }
+                }
+            }
+        });
     }
 
 

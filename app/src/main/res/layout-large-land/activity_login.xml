@@ -88,4 +88,15 @@
         android:text="@string/signup_textview_label"
         android:textColor="@android:color/white"
         android:textSize="12sp" />
+
+    <com.facebook.widget.LoginButton
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/fbLoginButton"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_below="@+id/signup_text_field"/>
 </RelativeLayout>

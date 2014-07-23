@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/windowBackground"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:layout_weight="1">
+
+            <com.pixel.singletune.app.utils.CustomTextView
+                style="@style/tune_meta_label_style"
+                android:text="Tunes"
+                android:id="@+id/tune_count_label"/>
+
+            <com.pixel.singletune.app.utils.CustomTextView
+                style="@style/tune_meta_count_style"
+                android:id="@+id/tune_count"
+                android:text="0"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:orientation="vertical"
+            >
+
+            <com.pixel.singletune.app.utils.CustomTextView
+                style="@style/tune_meta_label_style"
+                android:text="Followers"/>
+
+            <com.pixel.singletune.app.utils.CustomTextView
+                style="@style/tune_meta_count_style"
+                android:text="0"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:orientation="vertical"
+            >
+
+            <com.pixel.singletune.app.utils.CustomTextView
+                style="@style/tune_meta_label_style"
+                android:text="Following"/>
+
+            <com.pixel.singletune.app.utils.CustomTextView
+                style="@style/tune_meta_count_style"
+                android:text="0"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:text="Recent Tunes"
+        android:textColor="@android:color/holo_blue_light"
+        android:textAppearance="@android:style/TextAppearance.Holo.Small" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/holo_blue_light" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <GridView
+            android:id="@+id/tune_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:numColumns="@string/noCol"
+            android:horizontalSpacing="@dimen/user_grid_spacing"
+            android:verticalSpacing="@dimen/user_grid_spacing"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+
+        </GridView>
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
