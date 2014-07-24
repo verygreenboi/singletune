@@ -14,14 +14,11 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.ProgressCallback;
-import com.parse.SaveCallback;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.helpers.FileHelper;
+import com.pixel.singletune.app.services.songUploadService;
 import com.pixel.singletune.app.subClasses.Tunes;
 import com.squareup.picasso.Picasso;
 
@@ -30,6 +27,8 @@ import com.squareup.picasso.Picasso;
  */
 public class SendTuneActivity extends Activity {
 
+    //Setup broadcast identifier and intent
+    public static final String BROADCAST_UPLOAD = "com.pixel.singletune.app.broadcastupload";
     private static final String TAG = SendTuneActivity.class.getSimpleName();
     private static final int PICK_PHOTO_REQUEST = 0;
     protected Uri artMediaUri;
@@ -42,9 +41,6 @@ public class SendTuneActivity extends Activity {
     protected ImageButton mArtImageButton;
     protected String title;
     protected String caption;
-
-    //Setup broadcast identifier and intent
-    public static final String BROADCAST_UPLOAD = "com.pixel.singletune.app.broadcastupload";
     protected Intent mSendTuneIntent;
 
 
@@ -74,21 +70,6 @@ public class SendTuneActivity extends Activity {
             }
         });
     }
-//
-//    public class CropSquareTransformation implements Transformation {
-//        @Override public Bitmap transform(Bitmap source) {
-//            int size = Math.min(source.getWidth(), source.getHeight());
-//            int x = (source.getWidth() - size) / 2;
-//            int y = (source.getHeight() - size) / 2;
-//            Bitmap result = Bitmap.createBitmap(source, x, y, size, size);
-//            if (result != source) {
-//                source.recycle();
-//            }
-//            return result;
-//        }
-//
-//        @Override public String key() { return "square()"; }
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -166,42 +147,60 @@ public class SendTuneActivity extends Activity {
     private void sendTune(String title, final Tunes tune) {
         tune.setArtist(ParseUser.getCurrentUser());
         tune.setTitle(title);
-        byte[] fileBytes = FileHelper.getByteArrayFromFile(this, mMediaUri);
-
         String fileName = FileHelper.getFileName(this, mMediaUri, mFileType);
-        final ParseFile file = new ParseFile(fileName, fileBytes);
 
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
+//        byte[] fileBytes = FileHelper.getByteArrayFromFile(this, mMediaUri);
 
-                mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "1");
-                sendBroadcast(mSendTuneIntent);
+//        final ParseFile file = new ParseFile(fileName, fileBytes);
 
-                tune.setSongFile(file);
-                tune.setFileType(mFileType);
-                if (artMediaUri != null){
-                    byte[] fb = FileHelper.getByteArrayFromFile(getApplicationContext(), artMediaUri);
-                    String fn = FileHelper.getFileName(getApplicationContext(), artMediaUri, ParseConstants.TYPE_IMAGE);
-                    ParseFile ia = new ParseFile(fn, fb);
-                    tune.setCoverArt(ia);
-                }
+        Intent uploadIntent = new Intent(this, songUploadService.class);
+        uploadIntent.putExtra("mp3URI", String.valueOf(mMediaUri));
+        uploadIntent.putExtra("mp3Name", fileName);
+        uploadIntent.putExtra("mp3Type", mFileType);
+        if (artMediaUri != null){
+//            byte[] fb = FileHelper.getByteArrayFromFile(getApplicationContext(), artMediaUri);
+            String fn = FileHelper.getFileName(getApplicationContext(), artMediaUri, ParseConstants.TYPE_IMAGE);
+            uploadIntent.putExtra("artMediaUri", String.valueOf(artMediaUri));
+            uploadIntent.putExtra("artName", fn);
+        }
+        else {
+            uploadIntent.putExtra("artByte", "");
+        }
+        uploadIntent.putExtra("title", title);
 
-                tune.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "0");
-                        sendBroadcast(mSendTuneIntent);
-                        Log.d(TAG, "Done saving tune");
-                    }
-                });
-            }
-        }, new ProgressCallback() {
-            @Override
-            public void done(Integer integer) {
-                Log.d(TAG, String.valueOf(integer));
-            }
-        });
+        startService(uploadIntent);
+
+//        file.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//
+//                mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "1");
+//                sendBroadcast(mSendTuneIntent);
+//
+//                tune.setSongFile(file);
+//                tune.setFileType(mFileType);
+//                if (artMediaUri != null){
+//                    byte[] fb = FileHelper.getByteArrayFromFile(getApplicationContext(), artMediaUri);
+//                    String fn = FileHelper.getFileName(getApplicationContext(), artMediaUri, ParseConstants.TYPE_IMAGE);
+//                    ParseFile ia = new ParseFile(fn, fb);
+//                    tune.setCoverArt(ia);
+//                }
+//
+//                tune.saveInBackground(new SaveCallback() {
+//                    @Override
+//                    public void done(ParseException e) {
+//                        mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "0");
+//                        sendBroadcast(mSendTuneIntent);
+//                        Log.d(TAG, "Done saving tune");
+//                    }
+//                });
+//            }
+//        }, new ProgressCallback() {
+//            @Override
+//            public void done(Integer integer) {
+//                Log.d(TAG, String.valueOf(integer));
+//            }
+//        });
 
 
     }

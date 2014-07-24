@@ -30,11 +30,23 @@ import java.util.concurrent.TimeUnit;
 public class TimelineFragment extends ListFragment {
 
     private static final String TAG = MainActivity.class.getSimpleName() + "-Timeline fragment";
-    // Progress dialog and bcast receiver
-    boolean mBufferBroadcastIsRegistered;
-
+    private static final String PIN_LABEL = "tunes";
     protected List<Tunes> mTunes;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
+    protected SwipeRefreshLayout.OnRefreshListener OnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            getTunes();
+        }
+    };
+    // Progress dialog and bcast receiver
+    boolean mBufferBroadcastIsRegistered;
+    private BroadcastReceiver broadcastBufferReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent bufferIntent) {
+            showPD(bufferIntent);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,7 +76,7 @@ public class TimelineFragment extends ListFragment {
         query.findInBackground(new FindCallback<Tunes>() {
             @Override
             public void done(List<Tunes> tunes, ParseException e) {
-                if (mSwipeRefreshLayout.isRefreshing()){
+                if (mSwipeRefreshLayout.isRefreshing()) {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
                 try {
@@ -73,7 +85,7 @@ public class TimelineFragment extends ListFragment {
                     err.printStackTrace();
                 }
 
-                if (e == null){
+                if (e == null) {
                     mTunes = tunes;
                     TuneAdapter adapter = new TuneAdapter(getListView().getContext(), mTunes);
                     setListAdapter(adapter);
@@ -148,20 +160,6 @@ public class TimelineFragment extends ListFragment {
         }
 
     }
-
-    private BroadcastReceiver broadcastBufferReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent bufferIntent) {
-            showPD(bufferIntent);
-        }
-    };
-
-    protected SwipeRefreshLayout.OnRefreshListener OnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            getTunes();
-        }
-    };
 
 
 
