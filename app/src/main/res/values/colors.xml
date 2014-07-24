@@ -2,7 +2,7 @@
 <resources>
 
 
-    <color name="singletune_color">#4c8ab7</color>
+    <color name="singletune_color">#3f51b5</color>
 
     <color name="light_blue">#F6F7FF</color>
     <color name="alpha_deep_blue">#BF424953</color>
@@ -16,4 +16,33 @@
     <color name="swipeRefresh2">#E6796B</color>
     <color name="swipeRefresh3">#7DB441</color>
     <color name="swipeRefresh4">#4c4ab7</color>
+
+    <!--
+      *  Material Design Colors
+      *  From Google
+      -->
+
+    <!-- Indigo -->
+
+    <color name="indigo-100">#c5cae9</color>
+    <color name="indigo-500-default">#3f51b5</color>
+    <color name="indigo-700">#303f9f</color>
+
+    <!-- Orange -->
+
+    <color name="orange-100">#ffccbc</color>
+    <color name="orange-400">#ff7043</color>
+
+    <!--Text & Misc colors-->
+    <color name="col-default-text">#57000000</color>
+    <color name="col-sec-text">#36000000</color>
+    <color name="col-hint-text">#1a000000</color>
+    <color name="col-divider">#0c000000</color>
+
+    <color name="col-inv-default-text">#57ffffff</color>
+    <color name="col-inv-sec-text">#36ffffff</color>
+    <color name="col-inv-hint-text">#1affffff</color>
+    <color name="col-inv-divider">#0cffffff</color>
+
+
 </resources>
