@@ -2,23 +2,17 @@
 <pre-dex-items>
 
     <item
-        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/classes-ed3cae076ec6321810d77bb9e38b1c1ec8e9c134.jar"
-        jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.0.1/classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="f71a6822470c9eb659d4f4a6cb57b780b35f058b"/>
-    <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/Parse-1.5.0-e571914e375f52abeae1f084e00955f7ffca0953.jar"
         jar="/home/mrsmith/StudioProjects/SingleTune/app/libs/Parse-1.5.0.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="8a675f7e3312d8b28188ec653bbea6d435aaa7d1"/>
     <item
-        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/picasso-2.2.0-c761fd994a8454cf1494e1e1a759ed145bd9836d.jar"
-        jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.2.0/74137f8d9aac26dd9463efe32271f2be8d41cda9/picasso-2.2.0.jar"
+        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/classes-ed3cae076ec6321810d77bb9e38b1c1ec8e9c134.jar"
+        jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.0.1/classes.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="74137f8d9aac26dd9463efe32271f2be8d41cda9"/>
+        sha1="f71a6822470c9eb659d4f4a6cb57b780b35f058b"/>
     <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/classes-9914d13bf62783baa6a09e77b4a94ed17b261c98.jar"
         jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/com.google.android.gms/play-services/4.4.52/classes.jar"
@@ -32,23 +26,29 @@
         revision="19.1.0"
         sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad"/>
     <item
+        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/butterknife-5.1.1-10b3936a974adfb26483718f51703ad84a90eb88.jar"
+        jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/5.1.1/b3652dfd65ca0bcf18790ff1a1f7624af4cb2bb8/butterknife-5.1.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="b3652dfd65ca0bcf18790ff1a1f7624af4cb2bb8"/>
+    <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/acra-4.5.0-5926fa0c419b03ac248a8362a2e2a4e20c7f67c4.jar"
         jar="/home/mrsmith/StudioProjects/SingleTune/app/libs/acra-4.5.0.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="44a5eb946e0d83eed4a0128d877ca1fd8168b83a"/>
     <item
-        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/butterknife-5.0.0-7c969b7a56d9c1b2beec5977d48dcdffa605b3f9.jar"
-        jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/5.0.0/34f9a9915c4ac33f97a9339f4caad41cb02638d8/butterknife-5.0.0.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="34f9a9915c4ac33f97a9339f4caad41cb02638d8"/>
-    <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/classes-c4d0ee36de2169007ff8bd9a51023b8183e64e32.jar"
         jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library-extra/1.7.0/classes.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="5bc46125e10b4ee1b80189b0cf8aecc31533b738"/>
+    <item
+        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/volley-e8c55dac6f162b520ae409d79e8ad7022d8b8453.jar"
+        jar="/home/mrsmith/StudioProjects/SingleTune/app/libs/volley.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="d4aaa36e04ee71a83444f8367c97a46fda662d2c"/>
     <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/support-v13-19.0.1-ee60287695f3f059d68526697fb81d3abec6185c.jar"
         jar="/home/mrsmith/ide/android-studio/sdk/extras/android/m2repository/com/android/support/support-v13/19.0.1/support-v13-19.0.1.jar"
@@ -68,17 +68,23 @@
         revision="19.1.0"
         sha1="6ca319f998430aa20c4dde97ba6df213d6cf3dd0"/>
     <item
-        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-268760b434450a6afd9560bbdf3827719086478e.jar"
-        jar="/home/mrsmith/ide/android-studio/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/android-agent-3.419.0-3178b5b4c71f60bddab903a648169a24c28f649b.jar"
+        jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.newrelic.agent.android/android-agent/3.419.0/5a86a577401710743d457b6d8580dfed7b3aac9e/android-agent-3.419.0.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+        sha1="5a86a577401710743d457b6d8580dfed7b3aac9e"/>
     <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/classes-287ad9297270540966137bdd33567d6b7628588e.jar"
         jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/SinglTeune.app.libraries/facebook/unspecified/classes.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="f1b4bcc941a85155b9578c40d5c02561b2253ff8"/>
+        sha1="76b3a26fd71bfade27896175fa10ba48d1434070"/>
+    <item
+        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-268760b434450a6afd9560bbdf3827719086478e.jar"
+        jar="/home/mrsmith/ide/android-studio/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
     <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/android-iconify-1.0.6-943eec27eb51d156f26d8ea6f9d3d587d73a7a47.jar"
         jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.joanzapata.android/android-iconify/1.0.6/f9ee1a18c922b05fa5b48d9ff0a5ca4fccbf5b35/android-iconify-1.0.6.jar"
@@ -98,6 +104,12 @@
         revision="19.1.0"
         sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb"/>
     <item
+        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/picasso-2.3.3-1eb01b95924d66b2a592e00865a7c41404524c1b.jar"
+        jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.3.3/1262995965440e28ba5c4d480c9c9ab4ccce84cc/picasso-2.3.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="1262995965440e28ba5c4d480c9c9ab4ccce84cc"/>
+    <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/classes-19b030b3352a729565142e4604d31b4ee9ce4218.jar"
         jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.7.0/classes.jar"
         jumboMode="false"
@@ -109,6 +121,12 @@
         jumboMode="false"
         revision="19.1.0"
         sha1="7f6ef78b879e271f8645b2f2c2702390305f0fa2"/>
+    <item
+        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/okhttp-2.0.0-d5157254ec878baf6394ff9323bf383393be1efe.jar"
+        jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.0.0/4c8d1536dba3812cc1592090dc20c47a4ed3c35e/okhttp-2.0.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="4c8d1536dba3812cc1592090dc20c47a4ed3c35e"/>
     <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/classes-300e1151053ba79f84adcf2bc45bbcfa35a306e3.jar"
         jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/com.github.manuelpeinado.glassactionbar/glassactionbar/0.3.0/classes.jar"
@@ -122,6 +140,12 @@
         revision="19.1.0"
         sha1="59351ccb0a1631d30358f6a92749a072f2df7602"/>
     <item
+        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/okio-1.0.0-a0b00cd1c8b562a1618672c9e3f3315b3064f4f3.jar"
+        jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.0.0/2534c458682c73f5b9871131ab3098d3f987ca3/okio-1.0.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="02534c458682c73f5b9871131ab3098d3f987ca3"/>
+    <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/classes-139686073845dd48f63405786b63ea5e811833fb.jar"
         jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/com.github.manuelpeinado.fadingactionbar/fadingactionbar/3.1.2/classes.jar"
         jumboMode="false"
@@ -134,16 +158,16 @@
         revision="19.1.0"
         sha1="e1323875349a4e9b64fe8692f137f92b22dddcef"/>
     <item
+        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/okhttp-urlconnection-2.0.0-e5689779664870fe080efb62dd017def36f2de7e.jar"
+        jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.0.0/afe8399d352713b66e597e9670c741d1e60ae923/okhttp-urlconnection-2.0.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="afe8399d352713b66e597e9670c741d1e60ae923"/>
+    <item
         dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/classes-6026542b60063d98cb90ad2eed8d1f10d0792f2c.jar"
         jar="/home/mrsmith/StudioProjects/SingleTune/build/intermediates/exploded-aar/com.android.support/gridlayout-v7/19.0.1/classes.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="b1701c49371231e0423b7588539f24bdab485019"/>
-    <item
-        dex="/home/mrsmith/StudioProjects/SingleTune/app/build/intermediates/pre-dexed/debug/android-agent-3.407.0-373a1da4b5e23c146cbc200522583709fde088c8.jar"
-        jar="/home/mrsmith/.gradle/caches/modules-2/files-2.1/com.newrelic.agent.android/android-agent/3.407.0/8efdf9aea9332730432666354ec1f9b6c23de448/android-agent-3.407.0.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="8efdf9aea9332730432666354ec1f9b6c23de448"/>
 
 </pre-dex-items>

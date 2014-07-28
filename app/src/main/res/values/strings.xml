@@ -91,5 +91,8 @@
     <string name="complete_registration">Complete Registration</string>
 
     <string name="noCol">3</string>
+    <string name="nt_send_tune_title">Uploading Tune</string>
+    <string name="nt_send_tune_text">Will be done in a bit...</string>
+    <string name="follow_notification_action">com.pixel.singletune.app.UPDATE_STATUS</string>
 
 </resources>

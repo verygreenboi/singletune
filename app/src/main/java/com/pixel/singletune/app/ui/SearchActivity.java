@@ -16,8 +16,6 @@ import android.widget.ListView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseInstallation;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -25,9 +23,7 @@ import com.parse.SaveCallback;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.adapters.UserAdapter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.pixel.singletune.app.utils.FollowNotifiyer;
 
 import java.util.List;
 
@@ -193,32 +189,10 @@ public class SearchActivity extends Activity {
     }
 
     private void sendPushNotification(String userId, Boolean b) {
-        ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
-        query.whereEqualTo(ParseConstants.KEY_USER_ID, userId);
+        FollowNotifiyer nNotify;
 
-        JSONObject obj;
-
-        try {
-            obj = new JSONObject();
-            if (b) {
-                obj.put("msg", "Yay! " + ParseUser.getCurrentUser().getUsername() + " is now following you.");
-            } else {
-                obj.put("msg    ", "Aww! " + ParseUser.getCurrentUser().getUsername() + " has unfollowed you.");
-            }
-            obj.put("data", "You have a new activity");
-            obj.put("action", "com.pixel.singletune.app.UPDATE_STATUS");
-            obj.put("channel", "Activities");
-
-            ParsePush push = new ParsePush();
-            push.setQuery(query);
-            push.setData(obj);
-            push.sendInBackground();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
+        nNotify = new FollowNotifiyer(ParseUser.getCurrentUser(), userId, getString(R.string.follow_notification_action), b);
+        nNotify.sendNotification();
     }
 
 }

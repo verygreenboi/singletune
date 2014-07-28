@@ -10,4 +10,17 @@
     <dimen name="like_meta_horizontal_margin">8dp</dimen>
     <dimen name="timeline_horizontal_margin">8dp</dimen>
 
+    <!--<dimen name="display-4">112sp</dimen>-->
+    <!--<dimen name="display-3">56sp</dimen>-->
+    <!--<dimen name="display-2">45sp</dimen>-->
+    <!--<dimen name="display-1">34sp</dimen>-->
+    <!--<dimen name="headline">24sp</dimen>-->
+    <!--<dimen name="title">20sp</dimen>-->
+    <!--<dimen name="subhead">16sp</dimen>-->
+    <!--<dimen name="body-2">14sp</dimen>-->
+    <!--<dimen name="body-1">14sp</dimen>-->
+    <!--<dimen name="caption">12sp</dimen>-->
+    <!--<dimen name="menu">14sp</dimen>-->
+    <!--<dimen name="button">14sp</dimen>-->
+
 </resources>

@@ -200,7 +200,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Holo.Large</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
@@ -208,6 +208,19 @@
         <item name="com.pixel.singletune.app:font">fonts/Raleway-thin.ttf</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Holo.Medium</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="prolife_header_username_label">
+        <item name="com.pixel.singletune.app:font">fonts/Roboto-Light.ttf</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="prolife_header_real_name_label" parent="prolife_header_username_label">
+        <item name="com.pixel.singletune.app:font">fonts/Roboto-Regular.ttf</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

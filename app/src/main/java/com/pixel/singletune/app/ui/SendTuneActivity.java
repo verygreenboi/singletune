@@ -149,18 +149,13 @@ public class SendTuneActivity extends Activity {
         tune.setTitle(title);
         String fileName = FileHelper.getFileName(this, mMediaUri, mFileType);
 
-//        byte[] fileBytes = FileHelper.getByteArrayFromFile(this, mMediaUri);
-
-//        final ParseFile file = new ParseFile(fileName, fileBytes);
-
         Intent uploadIntent = new Intent(this, songUploadService.class);
-        uploadIntent.putExtra("mp3URI", String.valueOf(mMediaUri));
+        uploadIntent.putExtra("mp3URI", mMediaUri.toString());
         uploadIntent.putExtra("mp3Name", fileName);
         uploadIntent.putExtra("mp3Type", mFileType);
         if (artMediaUri != null){
-//            byte[] fb = FileHelper.getByteArrayFromFile(getApplicationContext(), artMediaUri);
             String fn = FileHelper.getFileName(getApplicationContext(), artMediaUri, ParseConstants.TYPE_IMAGE);
-            uploadIntent.putExtra("artMediaUri", String.valueOf(artMediaUri));
+            uploadIntent.putExtra("artMediaUri", artMediaUri.toString());
             uploadIntent.putExtra("artName", fn);
         }
         else {
@@ -169,38 +164,6 @@ public class SendTuneActivity extends Activity {
         uploadIntent.putExtra("title", title);
 
         startService(uploadIntent);
-
-//        file.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//
-//                mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "1");
-//                sendBroadcast(mSendTuneIntent);
-//
-//                tune.setSongFile(file);
-//                tune.setFileType(mFileType);
-//                if (artMediaUri != null){
-//                    byte[] fb = FileHelper.getByteArrayFromFile(getApplicationContext(), artMediaUri);
-//                    String fn = FileHelper.getFileName(getApplicationContext(), artMediaUri, ParseConstants.TYPE_IMAGE);
-//                    ParseFile ia = new ParseFile(fn, fb);
-//                    tune.setCoverArt(ia);
-//                }
-//
-//                tune.saveInBackground(new SaveCallback() {
-//                    @Override
-//                    public void done(ParseException e) {
-//                        mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "0");
-//                        sendBroadcast(mSendTuneIntent);
-//                        Log.d(TAG, "Done saving tune");
-//                    }
-//                });
-//            }
-//        }, new ProgressCallback() {
-//            @Override
-//            public void done(Integer integer) {
-//                Log.d(TAG, String.valueOf(integer));
-//            }
-//        });
 
 
     }

@@ -3,11 +3,10 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/profileAvatarImageView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scaleType="centerCrop"
-    android:adjustViewBounds="true"
+    android:layout_height="320dp"
     android:background="@drawable/profile_background"
     android:contentDescription="@string/profile_image_desc"
+    android:scaleType="centerCrop"
     android:src="@drawable/ic_action_user">
 
 </ImageView>

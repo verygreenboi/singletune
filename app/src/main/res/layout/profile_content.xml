@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/windowBackground"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp">
-
-
+    android:orientation="vertical">
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:background="@color/singletune_color"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp">
+
+        <com.pixel.singletune.app.utils.CustomTextView
+            android:id="@+id/profileUsernameLabel"
+            style="@style/prolife_header_username_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textSize="24sp" />
+
+        <com.pixel.singletune.app.utils.CustomTextView
+            android:id="@+id/fullNameLabel"
+            style="@style/prolife_header_real_name_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thompson Edolo"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="8dp"
-            android:layout_weight="1">
+            android:padding="8dp">
 
             <com.pixel.singletune.app.utils.CustomTextView
+                android:id="@+id/tune_count_label"
                 style="@style/tune_meta_label_style"
-                android:text="Tunes"
-                android:id="@+id/tune_count_label"/>
+                android:text="Tunes"/>
 
             <com.pixel.singletune.app.utils.CustomTextView
-                style="@style/tune_meta_count_style"
                 android:id="@+id/tune_count"
+                style="@style/tune_meta_count_style"
                 android:text="0"/>
 
         </LinearLayout>
@@ -39,8 +67,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="8dp"
             android:orientation="vertical"
+            android:padding="8dp"
             >
 
             <com.pixel.singletune.app.utils.CustomTextView
@@ -57,8 +85,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="8dp"
             android:orientation="vertical"
+            android:padding="8dp"
             >
 
             <com.pixel.singletune.app.utils.CustomTextView
@@ -76,12 +104,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
         android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:text="Recent Tunes"
-        android:textColor="@android:color/holo_blue_light"
-        android:textAppearance="@android:style/TextAppearance.Holo.Small" />
+        android:textAppearance="@android:style/TextAppearance.Holo.Small"
+        android:textColor="@android:color/holo_blue_light" />
 
     <View
         android:layout_width="match_parent"
@@ -97,13 +125,13 @@
             android:id="@+id/tune_grid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"
             android:clipToPadding="false"
-            android:numColumns="@string/noCol"
             android:horizontalSpacing="@dimen/user_grid_spacing"
-            android:verticalSpacing="@dimen/user_grid_spacing"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:numColumns="@string/noCol"
+            android:verticalSpacing="@dimen/user_grid_spacing">
 
         </GridView>
 

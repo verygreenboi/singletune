@@ -38,12 +38,14 @@ import static android.view.View.INVISIBLE;
 public class ProfileActivity extends Activity {
     protected ParseUser mCurrentUser;
     protected Context mContext = ProfileActivity.this;
-    @InjectView(R.id.profileAvatarImageView)
-    ImageView mProfileAvatar;
     protected GridView mGridView;
     protected List<Tunes> mTunes;
     protected ProgressBar mProgressBar;
     protected CustomTextView mTuneCount;
+    protected  CustomTextView mUsernameLabel;
+    protected CustomTextView mFullNameLabel;
+    @InjectView(R.id.profileAvatarImageView)
+    ImageView mProfileAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class ProfileActivity extends Activity {
         FadingActionBarHelper helper = new FadingActionBarHelper()
                 .actionBarBackground(R.drawable.ab_background_textured_singletune)
                 .headerLayout(R.layout.profile_header)
+                .parallax(true)
                 .contentLayout(R.layout.profile_content);
 
         setContentView(helper.createView(this));
@@ -61,11 +64,16 @@ public class ProfileActivity extends Activity {
         // Find various textviews to modify
         ButterKnife.inject(this);
 
+        mUsernameLabel = (CustomTextView)findViewById(R.id.profileUsernameLabel);
+        mFullNameLabel = (CustomTextView)findViewById(R.id.fullNameLabel);
+
 
         mCurrentUser = ParseUser.getCurrentUser();
         String userEmail = mCurrentUser.getEmail().toLowerCase();
 
         Boolean fbLinked = mCurrentUser.getBoolean("FBLinked");
+
+        mUsernameLabel.setText("@"+mCurrentUser.getUsername());
 
         // Set Header Image
 
@@ -73,17 +81,22 @@ public class ProfileActivity extends Activity {
             String fbID = mCurrentUser.getString("fbID");
             String fbPicURL = FileHelper.getFacebookPicture(fbID);
             Picasso.with(mContext).load(fbPicURL).placeholder(R.drawable.default_avatar).into(mProfileAvatar);
+
+            String fName = mCurrentUser.getString("First_Name") +" "+ mCurrentUser.getString("Last_Name");
+            mFullNameLabel.setText(fName);
         }
 
         else if (userEmail.equals("")){
             mProfileAvatar.setImageResource(R.drawable.default_avatar);
+            mFullNameLabel.setVisibility(View.GONE);
         }
         else {
             String hash = MD5Util.md5Hex(userEmail);
             String gravatarUrl = "http://www.gravatar.com/avatar/"+ hash + "?s=272&d=404";
             Picasso.with(mContext).load(gravatarUrl).placeholder(R.drawable.default_avatar).into(mProfileAvatar);
+            mFullNameLabel.setVisibility(View.GONE);
         }
-        setTitle(mCurrentUser.getUsername());
+        setTitle("");
 
         //Instantiate GridView
 

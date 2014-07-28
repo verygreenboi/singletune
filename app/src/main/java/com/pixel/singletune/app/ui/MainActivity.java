@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.newrelic.agent.android.NewRelic;
 import com.parse.ParseAnalytics;
-import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
@@ -41,10 +40,6 @@ import java.util.Locale;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
-    // Progress dialog and bcast receiver
-    boolean mUploadBroadcastIsRegistered;
-    private ProgressDialog pdBuff = null;
-
     public static final int TAKE_VOICE_NOTE_REQUEST = 0;
     public static final int PICK_VOICE_NOTE_REQUEST = 1;
     public static final int PICK_MP3_REQUEST = 2;
@@ -55,7 +50,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public static final int MEDIA_TYPE_VIDEO = 6;
     private static final String TAG = MainActivity.class.getSimpleName();
     public static int TAKE_VIDEO_REQUEST = 7;
-
     protected Uri mMediaUri;
     protected DialogInterface.OnClickListener mDialogListener =
             new DialogInterface.OnClickListener() {
@@ -90,7 +84,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                             break;
                         case 2: // Choose MP3
                             Intent chooseMp3Intent = new Intent(Intent.ACTION_GET_CONTENT);
-                            chooseMp3Intent.setType("audio/mp3");
+                            chooseMp3Intent.setType("audio/*");
                             Toast.makeText(MainActivity.this, R.string.mp3_size_limit, Toast.LENGTH_LONG).show();
                             startActivityForResult(chooseMp3Intent, PICK_MP3_REQUEST);
                             break;
@@ -156,6 +150,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             return state.equals(Environment.MEDIA_MOUNTED);
         }
     };
+    // Progress dialog and bcast receiver
+    boolean mUploadBroadcastIsRegistered;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -169,7 +165,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    private ProgressDialog pdBuff = null;
     private MediaRecorder mRecorder = null;
+    private BroadcastReceiver broadcastUploadReceiver = new BroadcastReceiver(){
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showPB(intent);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -301,7 +305,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         startActivity(intent);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -354,6 +357,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
 
     }
+
     @Override
     protected void onPause() {
 
@@ -374,14 +378,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             mUploadBroadcastIsRegistered = true;
         }
     }
-
-    private BroadcastReceiver broadcastUploadReceiver = new BroadcastReceiver(){
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            showPB(intent);
-        }
-    };
 
     private void showPB(Intent intent) {
         String uploadValue = intent.getStringExtra(ParseConstants.KEY_UPLOADING);

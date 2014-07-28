@@ -22,27 +22,27 @@
       *  From Google
       -->
 
-    <!-- Indigo -->
+    <!--&lt;!&ndash; Indigo &ndash;&gt;-->
 
-    <color name="indigo-100">#c5cae9</color>
-    <color name="indigo-500-default">#3f51b5</color>
-    <color name="indigo-700">#303f9f</color>
+    <!--<color name="indigo-100">#c5cae9</color>-->
+    <!--<color name="indigo-500-default">#3f51b5</color>-->
+    <!--<color name="indigo-700">#303f9f</color>-->
 
-    <!-- Orange -->
+    <!--&lt;!&ndash; Orange &ndash;&gt;-->
 
-    <color name="orange-100">#ffccbc</color>
-    <color name="orange-400">#ff7043</color>
+    <!--<color name="orange-100">#ffccbc</color>-->
+    <!--<color name="orange-400">#ff7043</color>-->
 
-    <!--Text & Misc colors-->
-    <color name="col-default-text">#57000000</color>
-    <color name="col-sec-text">#36000000</color>
-    <color name="col-hint-text">#1a000000</color>
-    <color name="col-divider">#0c000000</color>
+    <!--&lt;!&ndash;Text & Misc colors&ndash;&gt;-->
+    <!--<color name="col-default-text">#57000000</color>-->
+    <!--<color name="col-sec-text">#36000000</color>-->
+    <!--<color name="col-hint-text">#1a000000</color>-->
+    <!--<color name="col-divider">#0c000000</color>-->
 
-    <color name="col-inv-default-text">#57ffffff</color>
-    <color name="col-inv-sec-text">#36ffffff</color>
-    <color name="col-inv-hint-text">#1affffff</color>
-    <color name="col-inv-divider">#0cffffff</color>
+    <!--<color name="col-inv-default-text">#57ffffff</color>-->
+    <!--<color name="col-inv-sec-text">#36ffffff</color>-->
+    <!--<color name="col-inv-hint-text">#1affffff</color>-->
+    <!--<color name="col-inv-divider">#0cffffff</color>-->
 
 
 </resources>
