@@ -13,9 +13,7 @@ import org.json.JSONObject;
  * Created by mrsmith on 7/28/14.
  */
 public class FollowNotifiyer extends Notifyer {
-
-    private final ParseUser currentUser;
-    protected JSONObject obj;
+    String userId;
     boolean followStatus;
 
     public FollowNotifiyer(ParseUser currentUser, String userId, String action, boolean followStatus) {

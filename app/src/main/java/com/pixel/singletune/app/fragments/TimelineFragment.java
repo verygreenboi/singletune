@@ -87,8 +87,12 @@ public class TimelineFragment extends ListFragment {
 
                 if (e == null) {
                     mTunes = tunes;
-                    TuneAdapter adapter = new TuneAdapter(getListView().getContext(), mTunes);
-                    setListAdapter(adapter);
+                    if (getListView().getAdapter() == null) {
+                        TuneAdapter adapter = new TuneAdapter(getListView().getContext(), mTunes);
+                        setListAdapter(adapter);
+                    } else {
+                        ((TuneAdapter)getListView().getAdapter()).refill(mTunes);
+                    }
                 }
             }
         });

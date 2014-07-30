@@ -41,34 +41,19 @@ public class NotificationReceiver extends BroadcastReceiver {
             {
                 String action = intent.getAction();
                 Log.d(TAG, "got action " + action );
-                if (action.equals("com.pixel.singletune.app.UPDATE_STATUS"))
-                {
-                    String channel = intent.getExtras().getString("com.parse.Channel");
-                    JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
 
-                    Log.d(TAG, "got action " + action + " on channel " + channel + " with:");
-                    Iterator itr = json.keys();
-                    while (itr.hasNext()) {
-                        String key = (String) itr.next();
-                        if (key.equals("data"))
-                        {
-                            tlt = json.getString(key);
-                        }
-                        if (key.equals("msg")){
-                            msg = json.getString(key);
-                        }
-                        if (key.equals("push_hash")){
-                            String hash = json.getString(key);
-                        }
-                        Log.d(TAG, "..." + key + " => " + json.getString(key));
-                    }
-                }
+                buildHash(intent, action);
+
             }
 
         } catch (JSONException e) {
             Log.d(TAG, "JSONException: " + e.getMessage());
         }
 
+        buildNotification(context);
+    }
+
+    private void buildNotification(Context context) {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         Bitmap icon = BitmapFactory.decodeResource(context.getResources()
@@ -89,6 +74,28 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(0, noti);
+    }
+
+    private void buildHash(Intent intent, String action) throws JSONException {
+        String channel = intent.getExtras().getString("com.parse.Channel");
+        JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
+
+        Log.d(TAG, "got action " + action + " on channel " + channel + " with:");
+        Iterator itr = json.keys();
+        while (itr.hasNext()) {
+            String key = (String) itr.next();
+            if (key.equals("data"))
+            {
+                tlt = json.getString(key);
+            }
+            if (key.equals("msg")){
+                msg = json.getString(key);
+            }
+            if (key.equals("push_hash")){
+                String hash = json.getString(key);
+            }
+            Log.d(TAG, "..." + key + " => " + json.getString(key));
+        }
     }
 
 

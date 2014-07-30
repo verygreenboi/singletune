@@ -24,6 +24,7 @@ import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.adapters.UserAdapter;
 import com.pixel.singletune.app.utils.FollowNotifiyer;
+import com.pixel.singletune.app.utils.Notifyer;
 
 import java.util.List;
 
@@ -191,7 +192,7 @@ public class SearchActivity extends Activity {
     private void sendPushNotification(String userId, Boolean b) {
         FollowNotifiyer nNotify;
 
-        nNotify = new FollowNotifiyer(ParseUser.getCurrentUser(), userId, getString(R.string.follow_notification_action), b);
+        nNotify = new FollowNotifiyer(ParseUser.getCurrentUser(), userId, Notifyer.FOLLOW_NOTIFICATION_ACTION, b);
         nNotify.sendNotification();
     }
 

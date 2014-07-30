@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -23,9 +24,11 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.pixel.singletune.app.R;
+import com.pixel.singletune.app.SingleTuneApplication;
+import com.pixel.singletune.app.Widgets.SingleTuneImageView;
 import com.pixel.singletune.app.services.PlaySongService;
 import com.pixel.singletune.app.subClasses.Tunes;
-import com.squareup.picasso.Picasso;
+import com.pixel.singletune.app.utils.Notifyer;
 
 import java.util.List;
 
@@ -36,6 +39,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
     protected boolean isMusicPlaying = false;
     protected boolean isOnline;
     protected boolean isLiked = false;
+    ImageLoader imageLoader = SingleTuneApplication.getmInstance().getmImageLoader();
     private int lastPosition = -1;
 
     public TuneAdapter(Context context, List<Tunes> tunes) {
@@ -48,10 +52,13 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
 
+        if (imageLoader == null)
+            imageLoader = SingleTuneApplication.getmInstance().getmImageLoader();
+
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.tune_item, null);
             holder = new ViewHolder();
-            holder.tuneArt = (ImageView) convertView.findViewById(R.id.tuneImage);
+            holder.tuneArt = (SingleTuneImageView) convertView.findViewById(R.id.tuneImage);
             holder.artist = (TextView) convertView.findViewById(R.id.tuneListViewArtist);
             holder.title = (TextView) convertView.findViewById(R.id.tuneListViewTitle);
             holder.btnPlay = (ImageButton) convertView.findViewById(R.id.btnPlay);
@@ -72,15 +79,23 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         final Tunes tunes = mTunes.get(position);
         String username = tunes.getArtist().getUsername();
 
-        try {
-            String tuneArtURL = tunes.getCoverArt().getUrl();
-            if (tuneArtURL.isEmpty()) {
-                holder.tuneArt.setImageResource(R.drawable.tune_placeholder);
-            } else {
-                Picasso.with(mContext).load(tuneArtURL).placeholder(R.drawable.tune_placeholder).into(holder.tuneArt);
-            }
-        } catch (Exception e) {
-            holder.tuneArt.setImageResource(R.drawable.tune_placeholder);
+        if (tunes.getCoverArt().getUrl() != null){
+            holder.tuneArt.setImageUrl(tunes.getCoverArt().getUrl(), imageLoader);
+            holder.tuneArt.setVisibility(View.VISIBLE);
+            holder.tuneArt.setResponseObserver(new SingleTuneImageView.ResponseObserver(){
+
+                @Override
+                public void onError() {
+
+                }
+
+                @Override
+                public void onSuccess() {
+
+                }
+            });
+        } else{
+            holder.tuneArt.setVisibility(View.GONE);
         }
 
         final String tuneURL = tunes.getSongFile().getUrl();
@@ -150,12 +165,19 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
                         @Override
                         public void done(ParseException e) {
                             isLiked = true;
+
+                            //CreateActivity
+                            createActivity(tunes);
+
+                            String message = "Your tune was liked by ";
+
+                            Notifyer nNotify = new Notifyer(ParseUser.getCurrentUser(), tunes, message, Notifyer.LIKE_NOTIFICATION_ACTION);
+                            nNotify.sendNotification();
+
                             holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like_pressed);
                             getLikeCount(holder, tunes);
                             holder.tune_progress.setVisibility(View.INVISIBLE);
 
-                            //CreateActivity
-                            createActivity(tunes);
                         }
                     });
                 } else {
@@ -164,12 +186,12 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
                         @Override
                         public void done(ParseException e) {
                             isLiked = false;
+                            //deleteActivity
+                            deleteActivity(tunes);
                             holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like);
                             getLikeCount(holder, tunes);
                             holder.tune_progress.setVisibility(View.INVISIBLE);
 
-                            //deleteActivity
-                            deleteActivity(tunes);
                         }
                     });
                 }
@@ -263,13 +285,20 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         getContext().stopService(mServiceIntent);
     }
 
-    private void checkConnectivity() {
+    private boolean checkConnectivity() {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         isOnline = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting()|| cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting() || cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isAvailable();
+        return isOnline;
+    }
+
+    public void refill(List<Tunes> tunes){
+        mTunes.clear();
+        mTunes.addAll(tunes);
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder {
-        ImageView tuneArt;
+        SingleTuneImageView tuneArt;
         TextView title;
         TextView artist;
         ImageButton btnPlay;
@@ -280,4 +309,5 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         ImageView ic_tune_like;
         ProgressBar tune_progress;
     }
+
 }
