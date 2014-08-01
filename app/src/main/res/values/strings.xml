@@ -94,5 +94,11 @@
     <string name="nt_send_tune_text">Will be done in a bit...</string>
     <string name="follow_notification_action">com.pixel.singletune.app.UPDATE_STATUS</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="position_not_displayed_message">Unable to get view for desired position, because it\'s not being displayed on screen.</string>
+    <string name="onPause_tag">OnPause</string>
+    <string name="onDestroyView_tag">OnDestroyView</string>
+    <string name="playButton_desc">Play button</string>
+    <string name="ic_like_desc">Like icon desc</string>
+    <string name="ic_tune_meta_comment_desc">Tune meta comment desc</string>
 
 </resources>

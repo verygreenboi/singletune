@@ -16,7 +16,6 @@ import android.util.Log;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.ProgressCallback;
 import com.parse.SaveCallback;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.helpers.FileHelper;
@@ -81,16 +80,15 @@ public class songUploadService extends Service {
                 tune.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        Log.d(BROADCAST_UPLOAD_TUNE, "Tune saved");
-                        stopSelf();
+                        if (e == null) {
+                            Log.d(BROADCAST_UPLOAD_TUNE, "Tune saved");
+                            stopSelf();
+                        } else {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
-            }
-        }, new ProgressCallback() {
-            @Override
-            public void done(Integer i) {
-                Log.d(BROADCAST_UPLOAD_TUNE, String.valueOf(i));
             }
         });
 

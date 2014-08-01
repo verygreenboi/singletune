@@ -1,6 +1,7 @@
 package com.pixel.singletune.app;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,6 +18,7 @@ import com.pixel.singletune.app.subClasses.Comments;
 import com.pixel.singletune.app.subClasses.Tunes;
 import com.pixel.singletune.app.ui.NotificationsActivity;
 import com.pixel.singletune.app.utils.LruBitmapCache;
+import com.pixel.singletune.app.utils.UIUtils;
 
 /**
  * Created by smith on 3/30/14.
@@ -36,6 +38,10 @@ public class SingleTuneApplication extends Application {
 
     public static synchronized SingleTuneApplication getmInstance(){
         return mInstance;
+    }
+
+    public static boolean isTablet(Context c) {
+        return UIUtils.isTablet(c);
     }
 
     @Override
@@ -74,6 +80,7 @@ public class SingleTuneApplication extends Application {
 
         return  this.mLruBitmapCache;
     }
+
     public <T> void addToRequestQueue(Request<T> req){
         req.setTag(TAG);
         getmRequestQueue().add(req);

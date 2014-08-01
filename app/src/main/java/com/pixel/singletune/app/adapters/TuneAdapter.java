@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -24,7 +24,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.pixel.singletune.app.R;
-import com.pixel.singletune.app.SingleTuneApplication;
 import com.pixel.singletune.app.Widgets.SingleTuneImageView;
 import com.pixel.singletune.app.services.PlaySongService;
 import com.pixel.singletune.app.subClasses.Tunes;
@@ -34,12 +33,14 @@ import java.util.List;
 
 public class TuneAdapter extends ArrayAdapter<Tunes> {
 
+    public static final String COMMENT_BROADCAST = "com.pixel.singletune.app.COMMENT_BROADCAST";
     protected Context mContext;
     protected List<Tunes> mTunes;
     protected boolean isMusicPlaying = false;
     protected boolean isOnline;
     protected boolean isLiked = false;
-    ImageLoader imageLoader = SingleTuneApplication.getmInstance().getmImageLoader();
+    protected Intent mCommentIntent;
+//    protected ImageLoader imageLoader = SingleTuneApplication.getmInstance().getmImageLoader();
     private int lastPosition = -1;
 
     public TuneAdapter(Context context, List<Tunes> tunes) {
@@ -52,8 +53,8 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
 
-        if (imageLoader == null)
-            imageLoader = SingleTuneApplication.getmInstance().getmImageLoader();
+//        if (imageLoader == null)
+//            imageLoader = SingleTuneApplication.getmInstance().getmImageLoader();
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.tune_item, null);
@@ -64,6 +65,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
             holder.btnPlay = (ImageButton) convertView.findViewById(R.id.btnPlay);
             holder.like_count = (TextView) convertView.findViewById(R.id.tuneLikeCountTextView);
             holder.comment_count = (TextView) convertView.findViewById(R.id.tuneCommentCountTextView);
+            holder.commentLabel = (TextView) convertView.findViewById(R.id.TuneCommentTextView);
             holder.download_count = (TextView) convertView.findViewById(R.id.tuneDownloadCountTextView);
             holder.ic_tune_like = (ImageView) convertView.findViewById(R.id.ic_tune_like);
             holder.like_text = (TextView) convertView.findViewById(R.id.TuneLikeTextView);
@@ -79,24 +81,24 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         final Tunes tunes = mTunes.get(position);
         String username = tunes.getArtist().getUsername();
 
-        if (tunes.getCoverArt().getUrl() != null){
-            holder.tuneArt.setImageUrl(tunes.getCoverArt().getUrl(), imageLoader);
-            holder.tuneArt.setVisibility(View.VISIBLE);
-            holder.tuneArt.setResponseObserver(new SingleTuneImageView.ResponseObserver(){
-
-                @Override
-                public void onError() {
-
-                }
-
-                @Override
-                public void onSuccess() {
-
-                }
-            });
-        } else{
-            holder.tuneArt.setVisibility(View.GONE);
-        }
+//        if (tunes.getCoverArt().getUrl() != null){
+//            holder.tuneArt.setImageUrl(tunes.getCoverArt().getUrl(), imageLoader);
+//            holder.tuneArt.setVisibility(View.VISIBLE);
+//            holder.tuneArt.setResponseObserver(new SingleTuneImageView.ResponseObserver(){
+//
+//                @Override
+//                public void onError() {
+//
+//                }
+//
+//                @Override
+//                public void onSuccess() {
+//
+//                }
+//            });
+//        } else{
+//            holder.tuneArt.setVisibility(View.GONE);
+//        }
 
         final String tuneURL = tunes.getSongFile().getUrl();
         holder.title.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Aaargh.ttf"));
@@ -124,6 +126,17 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
 
         likeAction(holder, tunes);
 
+        // Comment Action
+
+        holder.commentLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCommentIntent = new Intent(COMMENT_BROADCAST);
+                mCommentIntent.putExtra("tuneid", tunes.getObjectId());
+                mContext.sendBroadcast(mCommentIntent);
+            }
+        });
+
         // Animation
 
         Animation animation = AnimationUtils.loadAnimation(convertView.getContext(),
@@ -132,6 +145,9 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         lastPosition = position;
 
         return convertView;
+    }
+
+    private void commentAction() {
     }
 
     private void playAction(final int position, final ViewHolder holder, final String tuneURL) {
@@ -209,7 +225,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
                 try {
                     Obj.deleteInBackground();
                 } catch (Exception et) {
-//                    et.printStackTrace();
+                    Log.e("Error", "An error has occoured", et);
                 }
             }
         });
@@ -299,13 +315,14 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
 
     public static class ViewHolder {
         SingleTuneImageView tuneArt;
-        TextView title;
-        TextView artist;
+        TextView title,
+                artist,
+                like_count,
+                like_text,
+                comment_count,
+                commentLabel,
+                download_count;
         ImageButton btnPlay;
-        TextView like_count;
-        TextView like_text;
-        TextView comment_count;
-        TextView download_count;
         ImageView ic_tune_like;
         ProgressBar tune_progress;
     }

@@ -27,11 +27,12 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:background="@color/tune_ic_bg_blue"
+            android:contentDescription="@string/playButton_desc"
             android:scaleType="fitCenter"
             android:src="@drawable/btn_play" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -106,6 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
+            android:contentDescription="@string/ic_like_desc"
             android:src="@drawable/ic_tune_meta_like" />
 
         <TextView
@@ -128,6 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
+            android:contentDescription="@string/ic_tune_meta_comment_desc"
             android:src="@drawable/ic_tune_meta_comment" />
 
         <TextView

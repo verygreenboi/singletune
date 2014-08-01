@@ -2,7 +2,6 @@ package com.pixel.singletune.app.ui;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -23,11 +23,15 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.newrelic.agent.android.NewRelic;
+import com.parse.GetCallback;
 import com.parse.ParseAnalytics;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.adapters.SectionsPagerAdapter;
+import com.pixel.singletune.app.subClasses.Tunes;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -150,6 +154,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             return state.equals(Environment.MEDIA_MOUNTED);
         }
     };
+    protected Fragment mCommentFragment;
     // Progress dialog and bcast receiver
     boolean mUploadBroadcastIsRegistered;
     /**
@@ -165,13 +170,17 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
-    private ProgressDialog pdBuff = null;
     private MediaRecorder mRecorder = null;
     private BroadcastReceiver broadcastUploadReceiver = new BroadcastReceiver(){
-
         @Override
         public void onReceive(Context context, Intent intent) {
             showPB(intent);
+        }
+    };
+    private BroadcastReceiver commentBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showCommentFragment(intent);
         }
     };
 
@@ -358,6 +367,35 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     }
 
+    private void showCommentFragment(Intent intent) {
+        String tuneId = intent.getStringExtra("tuneid");
+        ParseQuery<Tunes> q = ParseQuery.getQuery(Tunes.class);
+        q.whereEqualTo("objectid", tuneId);
+        q.getFirstInBackground(new GetCallback<Tunes>() {
+            @Override
+            public void done(Tunes tunes, ParseException e) {
+
+            }
+        });
+    }
+
+    private void showPB(Intent intent) {
+        String uploadValue = intent.getStringExtra(ParseConstants.KEY_UPLOADING);
+        int uploadValueInt = Integer.parseInt(uploadValue);
+        intProg(uploadValueInt);
+    }
+
+    private void intProg(int uploadValueInt) {
+        switch (uploadValueInt){
+            case 0:
+                setProgressBarIndeterminate(false);
+                break;
+            case 1:
+                setProgressBarIndeterminate(true);
+                break;
+        }
+    }
+
     @Override
     protected void onPause() {
 
@@ -379,20 +417,5 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
     }
 
-    private void showPB(Intent intent) {
-        String uploadValue = intent.getStringExtra(ParseConstants.KEY_UPLOADING);
-        int uploadValueInt = Integer.parseInt(uploadValue);
-        intProg(uploadValueInt);
-    }
 
-    private void intProg(int uploadValueInt) {
-        switch (uploadValueInt){
-            case 0:
-                setProgressBarIndeterminate(false);
-                break;
-            case 1:
-                setProgressBarIndeterminate(true);
-                break;
-        }
-    }
 }

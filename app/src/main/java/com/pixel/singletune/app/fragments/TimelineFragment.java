@@ -18,6 +18,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
+import com.pixel.singletune.app.SingleTuneApplication;
 import com.pixel.singletune.app.adapters.TuneAdapter;
 import com.pixel.singletune.app.services.PlaySongService;
 import com.pixel.singletune.app.subClasses.Tunes;
@@ -30,15 +31,16 @@ import java.util.concurrent.TimeUnit;
 public class TimelineFragment extends ListFragment {
 
     private static final String TAG = MainActivity.class.getSimpleName() + "-Timeline fragment";
-    private static final String PIN_LABEL = "tunes";
-    protected List<Tunes> mTunes;
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected SwipeRefreshLayout.OnRefreshListener OnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
             getTunes();
+            Log.i(TAG, "Has refreshed");
         }
     };
+    private static final String PIN_LABEL = "tunes";
+    protected List<Tunes> mTunes;
+    protected SwipeRefreshLayout mSwipeRefreshLayout;
     // Progress dialog and bcast receiver
     boolean mBufferBroadcastIsRegistered;
     private BroadcastReceiver broadcastBufferReceiver = new BroadcastReceiver() {
@@ -51,7 +53,12 @@ public class TimelineFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
+        View rootView;
+        if (!SingleTuneApplication.isTablet(getActivity().getApplicationContext())) {
+            rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
+        } else {
+            rootView = inflater.inflate(R.layout.fragment_timeline_tablet, container, false);
+        }
 
         getActivity().setProgressBarIndeterminateVisibility(true);
 
@@ -63,6 +70,9 @@ public class TimelineFragment extends ListFragment {
                 R.color.swipeRefresh3,
                 R.color.swipeRefresh4
         );
+
+
+        Log.i(TAG, "onCreateView");
 
         return rootView;
     }
@@ -101,6 +111,7 @@ public class TimelineFragment extends ListFragment {
     @Override
     public void onResume(){
         super.onResume();
+        Log.i(TAG, "onResume");
 
         getTunes();
 
@@ -121,14 +132,14 @@ public class TimelineFragment extends ListFragment {
             mBufferBroadcastIsRegistered = false;
         }
 
-        Log.i(TAG, "OnPause");
+        Log.i(TAG, getString(R.string.onPause_tag));
         super.onPause();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.i(TAG, "OnDestroyView");
+        Log.i(TAG, getString(R.string.onDestroyView_tag));
     }
 
     private void showPD(Intent bufferIntent) {
@@ -146,7 +157,7 @@ public class TimelineFragment extends ListFragment {
         // Wanted child
         int wc = p - fp;
         if (wc < 0 || wc >= getListView().getChildCount()) {
-            Log.w(TAG, "Unable to get view for desired position, because it's not being displayed on screen.");
+            Log.w(TAG, getString(R.string.position_not_displayed_message));
         } else {
             ProgressBar pb;
             View wv = getListView().getChildAt(wc);
