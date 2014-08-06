@@ -3,8 +3,11 @@ package com.pixel.singletune.app.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +27,15 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.pixel.singletune.app.R;
-import com.pixel.singletune.app.Widgets.SingleTuneImageView;
 import com.pixel.singletune.app.services.PlaySongService;
 import com.pixel.singletune.app.subClasses.Tunes;
 import com.pixel.singletune.app.utils.Notifyer;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 public class TuneAdapter extends ArrayAdapter<Tunes> {
@@ -40,8 +47,45 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
     protected boolean isOnline;
     protected boolean isLiked = false;
     protected Intent mCommentIntent;
+    protected String mTitle;
 //    protected ImageLoader imageLoader = SingleTuneApplication.getmInstance().getmImageLoader();
     private int lastPosition = -1;
+    private Target target = new Target(){
+
+        @Override
+        public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+mTitle+".jpg");
+                    try
+                    {
+                        file.createNewFile();
+                        FileOutputStream ostream = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, ostream);
+                        ostream.close();
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
+            }).start();
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+            if (placeHolderDrawable != null) {
+            }
+        }
+    };
 
     public TuneAdapter(Context context, List<Tunes> tunes) {
         super(context, R.layout.tune_item, tunes);
@@ -53,13 +97,10 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
 
-//        if (imageLoader == null)
-//            imageLoader = SingleTuneApplication.getmInstance().getmImageLoader();
-
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.tune_item, null);
             holder = new ViewHolder();
-            holder.tuneArt = (SingleTuneImageView) convertView.findViewById(R.id.tuneImage);
+            holder.tuneArt = (ImageView) convertView.findViewById(R.id.tuneImage);
             holder.artist = (TextView) convertView.findViewById(R.id.tuneListViewArtist);
             holder.title = (TextView) convertView.findViewById(R.id.tuneListViewTitle);
             holder.btnPlay = (ImageButton) convertView.findViewById(R.id.btnPlay);
@@ -81,28 +122,30 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         final Tunes tunes = mTunes.get(position);
         String username = tunes.getArtist().getUsername();
 
-//        if (tunes.getCoverArt().getUrl() != null){
-//            holder.tuneArt.setImageUrl(tunes.getCoverArt().getUrl(), imageLoader);
-//            holder.tuneArt.setVisibility(View.VISIBLE);
-//            holder.tuneArt.setResponseObserver(new SingleTuneImageView.ResponseObserver(){
-//
-//                @Override
-//                public void onError() {
-//
-//                }
-//
-//                @Override
-//                public void onSuccess() {
-//
-//                }
-//            });
-//        } else{
-//            holder.tuneArt.setVisibility(View.GONE);
-//        }
+        Picasso.with(mContext)
+                .load(tunes.getCoverArt().getUrl())
+                .placeholder(R.drawable.default_avatar)
+                .into(holder.tuneArt, new Callback.EmptyCallback(){
+                    @Override public void onSuccess() {
+                        // TODO: Implement progress bar
+//                        progressBar.setVisibility(View.GONE);
+                    }
+                    @Override
+                    public void onError() {
+                        // TODO: Implement progress bar
+//                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+        Picasso.with(mContext)
+                .load(tunes.getCoverArt().getUrl())
+                .into(target);
 
         final String tuneURL = tunes.getSongFile().getUrl();
         holder.title.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Aaargh.ttf"));
         holder.artist.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Aaargh.ttf"));
+
+
+        mTitle = tunes.getTitle();
 
         holder.title.setText(tunes.getTitle());
         holder.artist.setText(username);
@@ -314,7 +357,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
     }
 
     public static class ViewHolder {
-        SingleTuneImageView tuneArt;
+        ImageView tuneArt;
         TextView title,
                 artist,
                 like_count,

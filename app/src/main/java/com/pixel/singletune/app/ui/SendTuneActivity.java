@@ -1,11 +1,18 @@
 package com.pixel.singletune.app.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,11 +21,13 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.helpers.FileHelper;
-import com.pixel.singletune.app.services.songUploadService;
 import com.pixel.singletune.app.subClasses.Tunes;
 import com.squareup.picasso.Picasso;
 
@@ -31,6 +40,7 @@ public class SendTuneActivity extends Activity {
     public static final String BROADCAST_UPLOAD = "com.pixel.singletune.app.broadcastupload";
     private static final String TAG = SendTuneActivity.class.getSimpleName();
     private static final int PICK_PHOTO_REQUEST = 0;
+    private static final int myNotificationId = 1;
     protected Uri artMediaUri;
     protected Uri mMediaUri;
     protected String mFileType;
@@ -42,7 +52,6 @@ public class SendTuneActivity extends Activity {
     protected String title;
     protected String caption;
     protected Intent mSendTuneIntent;
-
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -147,25 +156,79 @@ public class SendTuneActivity extends Activity {
     private void sendTune(String title, final Tunes tune) {
         tune.setArtist(ParseUser.getCurrentUser());
         tune.setTitle(title);
+        byte[] fileBytes = FileHelper.getByteArrayFromFile(this, mMediaUri);
+
         String fileName = FileHelper.getFileName(this, mMediaUri, mFileType);
-
-        Intent uploadIntent = new Intent(this, songUploadService.class);
-        uploadIntent.putExtra("mp3URI", mMediaUri.toString());
-        uploadIntent.putExtra("mp3Name", fileName);
-        uploadIntent.putExtra("mp3Type", mFileType);
-        if (artMediaUri != null){
-            String fn = FileHelper.getFileName(getApplicationContext(), artMediaUri, ParseConstants.TYPE_IMAGE);
-            uploadIntent.putExtra("artMediaUri", artMediaUri.toString());
-            uploadIntent.putExtra("artName", fn);
-        }
-        else {
-            uploadIntent.putExtra("artByte", "");
-        }
-        uploadIntent.putExtra("title", title);
-
-        startService(uploadIntent);
+        final ParseFile file = new ParseFile(fileName, fileBytes);
 
 
+        showNotification();
+
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+
+                mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "1");
+                sendBroadcast(mSendTuneIntent);
+
+                tune.setSongFile(file);
+                tune.setFileType(mFileType);
+                if (artMediaUri != null){
+                    byte[] fb = FileHelper.getByteArrayFromFile(getApplicationContext(), artMediaUri);
+                    String fn = FileHelper.getFileName(getApplicationContext(), artMediaUri, ParseConstants.TYPE_IMAGE);
+                    ParseFile ia = new ParseFile(fn, fb);
+                    tune.setCoverArt(ia);
+                }
+
+                tune.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "0");
+                        sendBroadcast(mSendTuneIntent);
+                        Log.d(TAG, "Done saving tune");
+                    }
+                });
+            }
+        });
+
+
+    }
+
+    private void showNotification() {
+        PendingIntent notificationIntent = preparePendingIntent();
+        Notification notification = createNotification(notificationIntent);
+        displayNotification(notification);
+    }
+
+    private Notification createNotification(PendingIntent notificationIntent){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+        return builder
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentIntent(notificationIntent)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
+                .setContentTitle(getString(R.string.nt_send_tune_title))
+                .setContentText(getString(R.string.nt_send_tune_text))
+                .setProgress(0, 0, true)
+                .setPriority(-1)
+                .setOngoing(true)
+                .build();
+    }
+
+    @SuppressLint("InlinedApi")
+    private PendingIntent preparePendingIntent() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        return PendingIntent.getActivity(
+                getApplicationContext(),
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void displayNotification(Notification notification) {
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(myNotificationId , notification);
     }
 
 

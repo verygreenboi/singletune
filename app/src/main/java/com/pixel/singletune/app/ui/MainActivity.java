@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -42,7 +41,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
+public class MainActivity extends BaseFragmentActivity implements ActionBar.TabListener {
 
     public static final int TAKE_VOICE_NOTE_REQUEST = 0;
     public static final int PICK_VOICE_NOTE_REQUEST = 1;
