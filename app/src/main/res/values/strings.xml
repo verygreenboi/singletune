@@ -100,5 +100,8 @@
     <string name="playButton_desc">Play button</string>
     <string name="ic_like_desc">Like icon desc</string>
     <string name="ic_tune_meta_comment_desc">Tune meta comment desc</string>
+    <string name="title_activity_friend">Friends</string>
+    <string name="title_section_following">Following</string>
+    <string name="title_section_followers">Followers</string>
 
 </resources>

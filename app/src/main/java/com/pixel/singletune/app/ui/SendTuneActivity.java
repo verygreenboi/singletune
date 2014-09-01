@@ -21,13 +21,8 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
-import com.pixel.singletune.app.helpers.FileHelper;
 import com.pixel.singletune.app.subClasses.Tunes;
 import com.squareup.picasso.Picasso;
 
@@ -144,7 +139,10 @@ public class SendTuneActivity extends Activity {
                 }
                 else {
                     Tunes tune = new Tunes();
-                    sendTune(title, tune);
+//                    sendTune(title, tune);
+                    showNotification();
+                    tune.sendTune(getApplicationContext(),title, tune, mMediaUri, mFileType, artMediaUri);
+                    dismisNotification();
                     finish();
                     return true;
                 }
@@ -153,46 +151,51 @@ public class SendTuneActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void sendTune(String title, final Tunes tune) {
-        tune.setArtist(ParseUser.getCurrentUser());
-        tune.setTitle(title);
-        byte[] fileBytes = FileHelper.getByteArrayFromFile(this, mMediaUri);
-
-        String fileName = FileHelper.getFileName(this, mMediaUri, mFileType);
-        final ParseFile file = new ParseFile(fileName, fileBytes);
-
-
-        showNotification();
-
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-
-                mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "1");
-                sendBroadcast(mSendTuneIntent);
-
-                tune.setSongFile(file);
-                tune.setFileType(mFileType);
-                if (artMediaUri != null){
-                    byte[] fb = FileHelper.getByteArrayFromFile(getApplicationContext(), artMediaUri);
-                    String fn = FileHelper.getFileName(getApplicationContext(), artMediaUri, ParseConstants.TYPE_IMAGE);
-                    ParseFile ia = new ParseFile(fn, fb);
-                    tune.setCoverArt(ia);
-                }
-
-                tune.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "0");
-                        sendBroadcast(mSendTuneIntent);
-                        Log.d(TAG, "Done saving tune");
-                    }
-                });
-            }
-        });
-
-
+    private void dismisNotification() {
     }
+
+//    private void sendTune(String title, final Tunes tune) {
+//        tune.setArtist(ParseUser.getCurrentUser());
+//        tune.setTitle(title);
+//
+//        //Mp3 to bytes
+//        byte[] fileBytes = FileHelper.getByteArrayFromFile(this, mMediaUri);
+//        //Saving filename
+//        String fileName = FileHelper.getFileName(this, mMediaUri, mFileType);
+//        final ParseFile file = new ParseFile(fileName, fileBytes);
+//
+//
+//        showNotification();
+//
+//        file.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//
+////                mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "1");
+////                sendBroadcast(mSendTuneIntent);
+//
+//                tune.setSongFile(file);
+//                tune.setFileType(mFileType);
+//                if (artMediaUri != null){
+//                    byte[] fb = FileHelper.getByteArrayFromFile(getApplicationContext(), artMediaUri);
+//                    String fn = FileHelper.getFileName(getApplicationContext(), artMediaUri, ParseConstants.TYPE_IMAGE);
+//                    ParseFile ia = new ParseFile(fn, fb);
+//                    tune.setCoverArt(ia);
+//                }
+//
+//                tune.saveInBackground(new SaveCallback() {
+//                    @Override
+//                    public void done(ParseException e) {
+//                        mSendTuneIntent.putExtra(ParseConstants.KEY_UPLOADING, "0");
+//                        sendBroadcast(mSendTuneIntent);
+//                        Log.d(TAG, "Done saving tune");
+//                    }
+//                });
+//            }
+//        });
+//
+//
+//    }
 
     private void showNotification() {
         PendingIntent notificationIntent = preparePendingIntent();

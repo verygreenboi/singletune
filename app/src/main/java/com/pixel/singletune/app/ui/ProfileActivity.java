@@ -9,13 +9,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
@@ -37,15 +40,41 @@ import static android.view.View.INVISIBLE;
 
 public class ProfileActivity extends Activity {
     protected ParseUser mCurrentUser;
+    protected ParseRelation<ParseUser> mFriendsRelation;
     protected Context mContext = ProfileActivity.this;
-    protected GridView mGridView;
+
+    @InjectView(R.id.tune_grid)
+        protected GridView mGridView;
+
     protected List<Tunes> mTunes;
-    protected ProgressBar mProgressBar;
-    protected CustomTextView mTuneCount;
-    protected  CustomTextView mUsernameLabel;
-    protected CustomTextView mFullNameLabel;
+
+    @InjectView(R.id.pb_loading)
+        protected ProgressBar mProgressBar;
+
+    @InjectView(R.id.tune_count)
+        protected CustomTextView mTuneCount;
+
+    @InjectView(R.id.following_count)
+        protected CustomTextView mFollowingCount;
+
+    @InjectView(R.id.followers_count)
+        protected CustomTextView mFollowersCount;
+
+    @InjectView(R.id.profileUsernameLabel)
+        protected  CustomTextView mUsernameLabel;
+
+    @InjectView(R.id.fullNameLabel)
+        protected CustomTextView mFullNameLabel;
+
     @InjectView(R.id.profileAvatarImageView)
-    ImageView mProfileAvatar;
+        protected ImageView mProfileAvatar;
+
+    @InjectView(R.id.following_layout)
+        protected LinearLayout mFollowingLayout;
+
+    @InjectView(R.id.followers_layout)
+        protected LinearLayout mFollowersLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +93,12 @@ public class ProfileActivity extends Activity {
         // Find various textviews to modify
         ButterKnife.inject(this);
 
-        mUsernameLabel = (CustomTextView)findViewById(R.id.profileUsernameLabel);
-        mFullNameLabel = (CustomTextView)findViewById(R.id.fullNameLabel);
-
 
         mCurrentUser = ParseUser.getCurrentUser();
+
+
+        mFriendsRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
+
         String userEmail = mCurrentUser.getEmail().toLowerCase();
 
         Boolean fbLinked = mCurrentUser.getBoolean("FBLinked");
@@ -76,6 +106,7 @@ public class ProfileActivity extends Activity {
         mUsernameLabel.setText("@"+mCurrentUser.getUsername());
 
         // Set Header Image
+        // TODO: Implement disk cache
 
         if (fbLinked){
             String fbID = mCurrentUser.getString("fbID");
@@ -98,17 +129,7 @@ public class ProfileActivity extends Activity {
         }
         setTitle("");
 
-        //Instantiate GridView
-
-        mGridView = (GridView)findViewById(R.id.tune_grid);
-
-        mProgressBar = (ProgressBar)findViewById(R.id.pb_loading);
-
         mProgressBar.setVisibility(View.VISIBLE);
-
-        // Counts
-
-        mTuneCount = (CustomTextView)findViewById(R.id.tune_count);
 
     }
 
@@ -119,9 +140,42 @@ public class ProfileActivity extends Activity {
         // TuneCountQuery
         tuneCountQuery();
 
+        //FollowersCount
+        ParseQuery<ParseObject> fQuery = ParseQuery.getQuery("Follow");
+        fQuery.whereEqualTo("to", mCurrentUser);
+        fQuery.countInBackground(new CountCallback() {
+            @Override
+            public void done(int i, ParseException e) {
+                mFollowersCount.setText(String.valueOf(i));
+            }
+        });
+
+        //FollowingCount
+        followingCount();
+
         // TuneQuery
         tuneQuery();
 
+        mFollowingLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), FriendActivity.class);
+                i.putExtra("flwing", 0);
+                startActivity(i);
+
+            }
+        });
+
+    }
+
+    private void followingCount() {
+        mFriendsRelation.getQuery()
+                .countInBackground(new CountCallback() {
+                    @Override
+                    public void done(int i, ParseException e) {
+                        mFollowingCount.setText(String.valueOf(i));
+                    }
+                });
     }
 
     private void tuneCountQuery() {

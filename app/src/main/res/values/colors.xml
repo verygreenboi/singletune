@@ -22,27 +22,40 @@
       *  From Google
       -->
 
-    <!--&lt;!&ndash; Indigo &ndash;&gt;-->
+    <!-- Indigo -->
 
-    <!--<color name="indigo-100">#c5cae9</color>-->
-    <!--<color name="indigo-500-default">#3f51b5</color>-->
-    <!--<color name="indigo-700">#303f9f</color>-->
+    <color name="indigo_100">#c5cae9</color>
+    <color name="indigo_500_default">#3f51b5</color>
+    <color name="indigo_700">#303f9f</color>
 
-    <!--&lt;!&ndash; Orange &ndash;&gt;-->
+    <!-- Blue -->
 
-    <!--<color name="orange-100">#ffccbc</color>-->
-    <!--<color name="orange-400">#ff7043</color>-->
+    <color name="blue_100">#d0d9ff</color>
+    <color name="blue_500_default">#5677fc</color>
+    <color name="blue_700">#455ede</color>
+    <color name="blue_A700">#4d69ff</color>
 
-    <!--&lt;!&ndash;Text & Misc colors&ndash;&gt;-->
-    <!--<color name="col-default-text">#57000000</color>-->
-    <!--<color name="col-sec-text">#36000000</color>-->
-    <!--<color name="col-hint-text">#1a000000</color>-->
-    <!--<color name="col-divider">#0c000000</color>-->
+    <!-- Teal -->
 
-    <!--<color name="col-inv-default-text">#57ffffff</color>-->
-    <!--<color name="col-inv-sec-text">#36ffffff</color>-->
-    <!--<color name="col-inv-hint-text">#1affffff</color>-->
-    <!--<color name="col-inv-divider">#0cffffff</color>-->
+    <color name="teal_100">#b2dfdb</color>
+    <color name="teal_500_default">#009688</color>
+    <color name="teal_700">#00796b</color>
+
+    <!-- Orange -->
+
+    <color name="orange_100">#ffccbc</color>
+    <color name="orange_400">#ff7043</color>
+
+    <!--Text & Misc colors-->
+    <color name="col_default_text">#57000000</color>
+    <color name="col_sec_text">#36000000</color>
+    <color name="col_hint_text">#1a000000</color>
+    <color name="col_divider">#0c000000</color>
+
+    <color name="col_inv_default_text">#57ffffff</color>
+    <color name="col_inv_sec_text">#36ffffff</color>
+    <color name="col_inv_hint_text">#1affffff</color>
+    <color name="col_inv_divider">#0cffffff</color>
 
 
 </resources>

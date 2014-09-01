@@ -1,19 +1,26 @@
 package com.pixel.singletune.app.subClasses;
 
+import android.content.Context;
+import android.net.Uri;
+
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.pixel.singletune.app.ParseConstants;
+import com.pixel.singletune.app.helpers.FileHelper;
 
 /**
  * Created by mrsmith on 4/27/14.
  */
 @ParseClassName("Tunes")
 public class Tunes extends ParseObject {
-    public Tunes() {
 
-    }
+    private ParseUser mCurrentUser;
+
+    public Tunes() {}
 
     public String getTitle() {
         return getString("Title");
@@ -66,6 +73,40 @@ public class Tunes extends ParseObject {
         if (getLikeCount() > 0) {
             increment("Likes", -likeCount);
         }
+    }
+
+    public void sendTune(final Context ctx, String title, final Tunes t, Uri mTuneUri, final String mFileType,final Uri aUri){
+        mCurrentUser = ParseUser.getCurrentUser();
+        t.setArtist(ParseUser.getCurrentUser());
+        t.setTitle(title);
+        byte[] fileBytes = FileHelper.getByteArrayFromFile(ctx, mTuneUri);
+
+        String fileName = FileHelper.getFileName(ctx, mTuneUri, mFileType);
+        final ParseFile file = new ParseFile(fileName, fileBytes);
+
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                t.setSongFile(file);
+                t.setFileType(mFileType);
+                if (aUri != null){
+                    byte[] fb = FileHelper.getByteArrayFromFile(ctx, aUri);
+                    String fn = FileHelper.getFileName(ctx, aUri, ParseConstants.TYPE_IMAGE);
+                    ParseFile ia = new ParseFile(fn, fb);
+                    t.setCoverArt(ia);
+                }
+                t.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        Activities activity = new Activities();
+                        activity.setActivityType("tune");
+                        activity.setFrom(mCurrentUser);
+                        activity.setTuneId(t.getObjectId());
+                    }
+                });
+            }
+        });
+
     }
 
 }

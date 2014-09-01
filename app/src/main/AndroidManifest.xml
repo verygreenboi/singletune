@@ -67,7 +67,7 @@
             android:label="@string/title_activity_profile"
             android:parentActivityName=".ui.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.TranslucentActionBar.ActionBar.Overlay">
+            android:theme="@style/Theme.TranslucentActionBar.ActionBar.Overlay" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -75,7 +75,8 @@
         <activity
             android:name=".ui.SearchActivity"
             android:label="@string/title_activity_search_results"
-            android:parentActivityName=".ui.MainActivity" >
+            android:parentActivityName=".ui.MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -83,7 +84,8 @@
         <activity
             android:name=".ui.NotificationsActivity"
             android:label="@string/title_activity_notifications"
-            android:parentActivityName=".ui.MainActivity" >
+            android:parentActivityName=".ui.MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -91,7 +93,8 @@
         <activity
             android:name=".ui.SendTuneActivity"
             android:label="@string/SendTuneActivityLabel"
-            android:parentActivityName=".ui.MainActivity" >
+            android:parentActivityName=".ui.MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -99,7 +102,8 @@
         <activity
             android:name=".ui.VoiceRecorderActivity"
             android:label="@string/title_activity_voice_recorder"
-            android:parentActivityName=".ui.MainActivity" >
+            android:parentActivityName=".ui.MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -136,7 +140,8 @@
         <activity
             android:name=".ui.PlayerActivity"
             android:label="@string/title_activity_player"
-            android:parentActivityName=".ui.MainActivity" >
+            android:parentActivityName=".ui.MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -154,6 +159,15 @@
         <activity
             android:name=".ui.FBRegister"
             android:label="@string/title_activity_fbregister" >
+        </activity>
+        <activity
+            android:name=".ui.FriendActivity"
+            android:label="@string/title_activity_friend"
+            android:parentActivityName=".ui.ProfileActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ProfileActivity" />
         </activity>
     </application>
 

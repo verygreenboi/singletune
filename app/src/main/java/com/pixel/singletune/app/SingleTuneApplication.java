@@ -14,6 +14,7 @@ import com.parse.ParseObject;
 import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
 import com.parse.PushService;
+import com.pixel.singletune.app.subClasses.Activities;
 import com.pixel.singletune.app.subClasses.Comments;
 import com.pixel.singletune.app.subClasses.Tunes;
 import com.pixel.singletune.app.ui.NotificationsActivity;
@@ -50,6 +51,7 @@ public class SingleTuneApplication extends Application {
         //TODO: Remember to change these keys!!!
         ParseObject.registerSubclass(Tunes.class);
         ParseObject.registerSubclass(Comments.class);
+        ParseObject.registerSubclass(Activities.class);
         Parse.initialize(this, "rvPIzES8Mg0ChzNaZtrJ6udORV3ggajrjUlZMZ8e", "4WtUhM0JDyW1zmXlbjrW7HDbFthNtqBI2F44bvj2");
         ParseFacebookUtils.initialize("297125393789149");
         ParseTwitterUtils.initialize("KWzP9gru9afljRlSklYSREDJr", "Tx9gumxoFsD6y1AHPavXGa9p1IU6lTcKuDuTlzmF6Sc3gm4STo");

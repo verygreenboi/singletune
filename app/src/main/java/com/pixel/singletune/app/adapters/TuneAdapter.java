@@ -12,8 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,17 +20,24 @@ import android.widget.TextView;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.services.PlaySongService;
+import com.pixel.singletune.app.subClasses.Activities;
 import com.pixel.singletune.app.subClasses.Tunes;
 import com.pixel.singletune.app.utils.Notifyer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -180,13 +185,6 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
             }
         });
 
-        // Animation
-
-        Animation animation = AnimationUtils.loadAnimation(convertView.getContext(),
-                (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        convertView.startAnimation(animation);
-        lastPosition = position;
-
         return convertView;
     }
 
@@ -217,42 +215,64 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         holder.like_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.tune_progress.setVisibility(View.VISIBLE);
-                if (!isLiked) {
-                    tunes.increaseLike(1);
-                    tunes.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            isLiked = true;
+                if (tunes.getArtist().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                    holder.tune_progress.setVisibility(View.VISIBLE);
+                    if (!isLiked) {
+                        tunes.increaseLike(1);
+                        tunes.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                isLiked = true;
 
-                            //CreateActivity
-                            createActivity(tunes);
+                                //CreateActivity
+                                createActivity(tunes);
 
-                            String message = "Your tune was liked by ";
+                                String message = "Your tune was liked by ";
 
-                            Notifyer nNotify = new Notifyer(ParseUser.getCurrentUser(), tunes, message, Notifyer.LIKE_NOTIFICATION_ACTION);
-                            nNotify.sendNotification();
 
-                            holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like_pressed);
-                            getLikeCount(holder, tunes);
-                            holder.tune_progress.setVisibility(View.INVISIBLE);
+                                JSONObject obj;
 
-                        }
-                    });
-                } else {
-                    tunes.reduceLike(1);
-                    tunes.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            isLiked = false;
-                            //deleteActivity
-                            deleteActivity(tunes);
-                            holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like);
-                            getLikeCount(holder, tunes);
-                            holder.tune_progress.setVisibility(View.INVISIBLE);
+                                ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
+                                query.whereEqualTo(ParseConstants.KEY_USER_ID, tunes.getArtist().getObjectId());
+                                String fMessage = message + ParseUser.getCurrentUser().getUsername();
+                                try{
 
-                        }
-                    });
+                                    obj = new JSONObject();
+                                    obj.put("msg", fMessage);
+                                    obj.put("data", "You have a new like.");
+                                    obj.put("action", Notifyer.LIKE_NOTIFICATION_ACTION);
+                                    obj.put("channel", "Activities");
+
+                                    ParsePush push = new ParsePush();
+                                    push.setQuery(query);
+                                    push.setData(obj);
+                                    push.sendInBackground();
+
+                                } catch (JSONException el) {
+                                    el.printStackTrace();
+                                }
+
+                                holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like_pressed);
+                                getLikeCount(holder, tunes);
+                                holder.tune_progress.setVisibility(View.INVISIBLE);
+
+                            }
+                        });
+                    } else {
+                        tunes.reduceLike(1);
+                        tunes.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                isLiked = false;
+                                //deleteActivity
+                                deleteActivity(tunes);
+                                holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like);
+                                getLikeCount(holder, tunes);
+                                holder.tune_progress.setVisibility(View.INVISIBLE);
+
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -275,11 +295,17 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
     }
 
     private void createActivity(Tunes tunes) {
-        ParseObject tLikeActivity = new ParseObject("Activities");
-        tLikeActivity.put("from", ParseUser.getCurrentUser());
-        tLikeActivity.put("to", tunes.getArtist());
-        tLikeActivity.put("activity", "like");
-        tLikeActivity.put("tune", tunes.getObjectId());
+        Activities tLikeActivity = new Activities();
+
+        tLikeActivity.setFrom(ParseUser.getCurrentUser());
+        tLikeActivity.setTo(tunes.getArtist());
+        tLikeActivity.setActivityType("like");
+        tLikeActivity.setTuneId(tunes.getObjectId());
+
+//        tLikeActivity.put("from", ParseUser.getCurrentUser());
+//        tLikeActivity.put("to", tunes.getArtist());
+//        tLikeActivity.put("activity", "like");
+//        tLikeActivity.put("tune", tunes.getObjectId());
         tLikeActivity.saveInBackground();
     }
 

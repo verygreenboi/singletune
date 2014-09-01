@@ -1,10 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/bg_image"
-        style="@style/AuthBackgroundImage" />
+    android:layout_height="match_parent"
+    android:background="@color/teal_500_default">
 
     <RelativeLayout
         android:id="@+id/titleLayout"
@@ -15,9 +12,9 @@
             android:id="@+id/ic_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher"
             android:layout_alignBottom="@+id/appTitle"
-            android:layout_toLeftOf="@+id/appTitle" />
+            android:layout_toLeftOf="@+id/appTitle"
+            android:src="@drawable/ic_launcher" />
 
         <com.pixel.singletune.app.utils.CustomTextView
             android:id="@+id/appTitle"
@@ -27,8 +24,8 @@
             android:id="@+id/subtitle"
             style="@style/appTitle.appSubtitle"
             android:layout_below="@+id/appTitle"
-            android:typeface="sans"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            android:typeface="sans" />
     </RelativeLayout>
 
 
@@ -84,13 +81,13 @@
         android:textSize="12sp" />
 
     <com.facebook.widget.LoginButton
+        android:id="@+id/fbLoginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/signup_text_field"
         android:layout_centerHorizontal="true"
-        android:id="@+id/fbLoginButton"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_below="@+id/signup_text_field"/>
+        android:layout_marginTop="16dp"/>
 </RelativeLayout>

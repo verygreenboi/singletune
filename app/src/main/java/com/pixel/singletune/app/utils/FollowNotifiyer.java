@@ -9,9 +9,6 @@ import com.pixel.singletune.app.ParseConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by mrsmith on 7/28/14.
- */
 public class FollowNotifiyer extends Notifyer {
     String userId;
     boolean followStatus;

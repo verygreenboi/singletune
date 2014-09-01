@@ -16,6 +16,9 @@ import android.widget.ListView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -23,8 +26,9 @@ import com.parse.SaveCallback;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.adapters.UserAdapter;
-import com.pixel.singletune.app.utils.FollowNotifiyer;
-import com.pixel.singletune.app.utils.Notifyer;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -44,9 +48,20 @@ public class SearchActivity extends Activity {
             ImageView checkAvatarView = (ImageView) view.findViewById(R.id.selectedAvatarImageView);
 //            TODO: Remember to use overlay image
             if (mGridView.isItemChecked(i)) {
-//            // add the friend
+                //TODO: Refactor as it might be redundant
                 mFriendsRelation.add(mUsers.get(i));
-                followed = true;
+
+                ParseObject follow = new ParseObject("Follow");
+                follow.put("from", ParseUser.getCurrentUser());
+                follow.put("to", mUsers.get(i));
+                follow.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+
+                        followed = true;
+
+                    }
+                });
 
                 // Add Checkmark
                 checkAvatarView.setVisibility(View.VISIBLE);
@@ -120,6 +135,7 @@ public class SearchActivity extends Activity {
         String gUsername = gUname.getText().toString();
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereContains("username", gUsername);
+        query.whereNotEqualTo("objectId", mCurrentUser.getObjectId());
         query.orderByAscending(ParseConstants.KEY_USERNAME);
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
         query.setLimit(1000);
@@ -190,10 +206,32 @@ public class SearchActivity extends Activity {
     }
 
     private void sendPushNotification(String userId, Boolean b) {
-        FollowNotifiyer nNotify;
+        ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
+        query.whereEqualTo(ParseConstants.KEY_USER_ID, userId);
 
-        nNotify = new FollowNotifiyer(ParseUser.getCurrentUser(), userId, Notifyer.FOLLOW_NOTIFICATION_ACTION, b);
-        nNotify.sendNotification();
+        JSONObject obj;
+
+        try {
+            obj = new JSONObject();
+            if (b) {
+                obj.put("msg", "Yay! " + ParseUser.getCurrentUser().getUsername() + " is now following you.");
+            } else {
+                obj.put("msg    ", "Aww! " + ParseUser.getCurrentUser().getUsername() + " has unfollowed you.");
+            }
+            obj.put("data", "You have a new activity");
+            obj.put("action", "com.pixel.singletune.app.UPDATE_STATUS");
+            obj.put("channel", "Activities");
+
+            ParsePush push = new ParsePush();
+            push.setQuery(query);
+            push.setData(obj);
+            push.sendInBackground();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }

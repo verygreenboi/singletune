@@ -3,20 +3,17 @@ package com.pixel.singletune.app.fragments;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
-import com.pixel.singletune.app.adapters.TuneAdapter;
+import com.pixel.singletune.app.services.PlaySongService;
 import com.pixel.singletune.app.subClasses.Tunes;
 import com.pixel.singletune.app.ui.MainActivity;
 
@@ -29,13 +26,6 @@ public abstract class BaseListFragment extends ListFragment{
 
     protected static final String TAG = MainActivity.class.getSimpleName() + "List fragment";
 
-    protected SwipeRefreshLayout.OnRefreshListener OnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            getTunes();
-            Log.i(TAG, "Has refreshed");
-        }
-    };
     protected static final String PIN_LABEL = "tunes";
     protected ParseRelation<ParseUser> mFollowersRelation;
     protected ParseUser mCurrentUser;
@@ -51,6 +41,37 @@ public abstract class BaseListFragment extends ListFragment{
     protected boolean isInCache;
     // Progress dialog and bcast receiver
     boolean mBufferBroadcastIsRegistered;
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.i(TAG, "onResume");
+
+        // Register BCASTreceiver
+
+        if (!mBufferBroadcastIsRegistered) {
+            getActivity().registerReceiver(broadcastBufferReceiver,
+                    new IntentFilter(PlaySongService.BROADCAST_BUFFER));
+            mBufferBroadcastIsRegistered = true;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (mBufferBroadcastIsRegistered) {
+            getActivity().unregisterReceiver(broadcastBufferReceiver);
+            mBufferBroadcastIsRegistered = false;
+        }
+
+        Log.i(TAG, getString(R.string.onPause_tag));
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG, getString(R.string.onDestroyView_tag));
+    }
 
     private void showPD(Intent bufferIntent) {
         String bufferValue = bufferIntent.getStringExtra("Buffering");
@@ -86,35 +107,4 @@ public abstract class BaseListFragment extends ListFragment{
 
     }
 
-    protected void getTunes() {
-        ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
-        query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
-        isInCache = query.hasCachedResult();
-        if (isInCache)
-            query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.include("parent");
-        query.findInBackground(new FindCallback<Tunes>() {
-            @Override
-            public void done(List<Tunes> tunes, ParseException e) {
-                if (mSwipeRefreshLayout.isRefreshing()) {
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-                try {
-                    getActivity().setProgressBarIndeterminateVisibility(false);
-                } catch (Exception err) {
-                    err.printStackTrace();
-                }
-
-                if (e == null) {
-                    mTunes = tunes;
-                    if (getListView().getAdapter() == null) {
-                        TuneAdapter adapter = new TuneAdapter(getListView().getContext(), mTunes);
-                        setListAdapter(adapter);
-                    } else {
-                        ((TuneAdapter)getListView().getAdapter()).refill(mTunes);
-                    }
-                }
-            }
-        });
-    }
 }

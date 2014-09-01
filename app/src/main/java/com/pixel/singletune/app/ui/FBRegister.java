@@ -31,7 +31,6 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.pixel.singletune.app.R;
-import com.pixel.singletune.app.helpers.FileHelper;
 
 public class FBRegister extends Activity {
 
@@ -44,12 +43,11 @@ public class FBRegister extends Activity {
     protected GraphUser mGraphUser;
     protected Request mMeRequest;
     protected Button mCompleteRegButton;
-    private ProgressDialog progressDialog;
     protected EditText mUsernameField;
     protected EditText mPasswordField;
     protected EditText mPasswordConfirmationField;
-
     protected String mUserEmail;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
