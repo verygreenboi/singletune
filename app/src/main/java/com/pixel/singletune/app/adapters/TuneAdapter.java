@@ -1,13 +1,8 @@
 package com.pixel.singletune.app.adapters;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,91 +15,47 @@ import android.widget.TextView;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
+import com.pixel.singletune.app.models.Tune;
 import com.pixel.singletune.app.services.PlaySongService;
-import com.pixel.singletune.app.subClasses.Activities;
 import com.pixel.singletune.app.subClasses.Tunes;
-import com.pixel.singletune.app.utils.Notifyer;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.List;
+public class TuneAdapter extends ArrayAdapter<Tune> {
 
-public class TuneAdapter extends ArrayAdapter<Tunes> {
-
-    public static final String COMMENT_BROADCAST = "com.pixel.singletune.app.COMMENT_BROADCAST";
-    protected Context mContext;
-    protected List<Tunes> mTunes;
     protected boolean isMusicPlaying = false;
-    protected boolean isOnline;
     protected boolean isLiked = false;
     protected Intent mCommentIntent;
     protected String mTitle;
-//    protected ImageLoader imageLoader = SingleTuneApplication.getmInstance().getmImageLoader();
-    private int lastPosition = -1;
-    private Target target = new Target(){
+    String mUsername;
+    String mTuneURL;
+    String mTuneArtUrl;
+    String mTuneId;
+    String mUserId;
+    ParseUser mParseUser;
+    private Tunes mTune;
 
-        @Override
-        public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+mTitle+".jpg");
-                    try
-                    {
-                        file.createNewFile();
-                        FileOutputStream ostream = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, ostream);
-                        ostream.close();
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-
-                }
-            }).start();
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-            if (placeHolderDrawable != null) {
-            }
-        }
-    };
-
-    public TuneAdapter(Context context, List<Tunes> tunes) {
-        super(context, R.layout.tune_item, tunes);
-        mContext = context;
-        mTunes = tunes;
+    public TuneAdapter(Context c, ArrayList<Tune> tunes){
+        super(c, 0 , tunes);
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Tune t = getItem(position);
         final ViewHolder holder;
+        if (convertView == null){
 
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.tune_item, null);
             holder = new ViewHolder();
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(R.layout.tune_item, parent, false);
+
             holder.tuneArt = (ImageView) convertView.findViewById(R.id.tuneImage);
             holder.artist = (TextView) convertView.findViewById(R.id.tuneListViewArtist);
             holder.title = (TextView) convertView.findViewById(R.id.tuneListViewTitle);
@@ -118,79 +69,118 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
             holder.tune_progress = (ProgressBar) convertView.findViewById(R.id.tuneBufferProgress);
 
             convertView.setTag(holder);
-        } else {
+        }
+        else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        // Get current tune
+        mTuneId = t.getTuneObjectId();
+        mTitle = t.getTitle();
+        mTuneURL = t.getTuneAudioUrl();
+        mTuneArtUrl = t.getTuneArtUrl();
+        mUserId = t.getArtisteObjectId();
+        mUsername = t.getArtisteName();
 
-        final Tunes tunes = mTunes.get(position);
-        String username = tunes.getArtist().getUsername();
-
-        Picasso.with(mContext)
-                .load(tunes.getCoverArt().getUrl())
-                .placeholder(R.drawable.default_avatar)
-                .into(holder.tuneArt, new Callback.EmptyCallback(){
-                    @Override public void onSuccess() {
-                        // TODO: Implement progress bar
-//                        progressBar.setVisibility(View.GONE);
-                    }
-                    @Override
-                    public void onError() {
-                        // TODO: Implement progress bar
-//                        progressBar.setVisibility(View.GONE);
-                    }
-                });
-        Picasso.with(mContext)
-                .load(tunes.getCoverArt().getUrl())
-                .into(target);
-
-        final String tuneURL = tunes.getSongFile().getUrl();
-        holder.title.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Aaargh.ttf"));
-        holder.artist.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Aaargh.ttf"));
-
-
-        mTitle = tunes.getTitle();
-
-        holder.title.setText(tunes.getTitle());
-        holder.artist.setText(username);
-
-        // PlayAction
-
-        playAction(position, holder, tuneURL);
-
-        /*
-         *  Tune meta area
-         */
-
-        // Get like
-
-        getLike(holder, tunes);
-
-        // Get like count
-        getLikeCount(holder, tunes);
-
-        // Like action
-
-        likeAction(holder, tunes);
-
-        // Comment Action
-
-        holder.commentLabel.setOnClickListener(new View.OnClickListener() {
+        ParseQuery<Tunes> tQuery = ParseQuery.getQuery(Tunes.class);
+        tQuery.whereEqualTo("objectId", mTuneId);
+        tQuery.getFirstInBackground(new GetCallback<Tunes>() {
             @Override
-            public void onClick(View view) {
-                mCommentIntent = new Intent(COMMENT_BROADCAST);
-                mCommentIntent.putExtra("tuneid", tunes.getObjectId());
-                mContext.sendBroadcast(mCommentIntent);
+            public void done(Tunes tunes, ParseException e) {
+                if (e == null) {
+                    mTune = tunes;
+                }
             }
         });
 
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo("objectId", mUserId);
+        query.getFirstInBackground(new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser parseUser, ParseException e) {
+                if (e == null){
+                    mParseUser = parseUser;
+                }
+            }
+        });
+
+        holder.title.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Aaargh.ttf"));
+        holder.artist.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Aaargh.ttf"));
+
+        holder.title.setText(mTitle);
+        holder.artist.setText(mUsername);
+
+        Picasso.with(getContext()).
+                load(mTuneArtUrl).
+                placeholder(R.drawable.default_avatar).
+                into(holder.tuneArt, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // TODO: Implement progress bar
+                    }
+
+                    @Override
+                    public void onError() {
+                        // TODO: Implement progress bar
+                    }
+                });
+//
+        //PlayAction
+//
+        playAction(position, holder, mTuneURL);
+
+        // Get like
+
+        getLike(holder);
+
+        // Get like count
+        getLikeCount(holder, mTuneId);
+
         return convertView;
+
     }
 
-    private void commentAction() {
-    }
-
+//    public static final String COMMENT_BROADCAST = "com.pixel.singletune.app.COMMENT_BROADCAST";
+//
+//    private Target target = new Target(){
+//
+//        @Override
+//        public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    File file = new File(Environment.getExternalStorageDirectory().getPath() +"/"+mTitle+".jpg");
+//                    try
+//                    {
+//                        file.createNewFile();
+//                        FileOutputStream ostream = new FileOutputStream(file);
+//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, ostream);
+//                        ostream.close();
+//                    }
+//                    catch (Exception e)
+//                    {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            }).start();
+//        }
+//
+//        @Override
+//        public void onBitmapFailed(Drawable errorDrawable) {
+//
+//        }
+//
+//        @Override
+//        public void onPrepareLoad(Drawable placeHolderDrawable) {
+//            if (placeHolderDrawable != null) {
+//            }
+//        }
+//    };
+//
+//    private void commentAction() {
+//    }
+//
     private void playAction(final int position, final ViewHolder holder, final String tuneURL) {
         holder.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,66 +200,43 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
             }
         });
     }
-
-    private void likeAction(final ViewHolder holder, final Tunes tunes) {
+//
+    private void likeAction(final  ViewHolder holder, final String tunes){
         holder.like_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tunes.getArtist().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                if (tunes.equals(ParseUser.getCurrentUser().getObjectId())){
                     holder.tune_progress.setVisibility(View.VISIBLE);
-                    if (!isLiked) {
-                        tunes.increaseLike(1);
-                        tunes.saveInBackground(new SaveCallback() {
+                    if (!isLiked){
+                        mTune.increaseLike(1);
+                        mTune.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
                                 isLiked = true;
-
                                 //CreateActivity
-                                createActivity(tunes);
+                                createActivity();
 
-                                String message = "Your tune was liked by ";
+//                                String message = "Your tune was liked by ";
 
-
-                                JSONObject obj;
-
-                                ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
-                                query.whereEqualTo(ParseConstants.KEY_USER_ID, tunes.getArtist().getObjectId());
-                                String fMessage = message + ParseUser.getCurrentUser().getUsername();
-                                try{
-
-                                    obj = new JSONObject();
-                                    obj.put("msg", fMessage);
-                                    obj.put("data", "You have a new like.");
-                                    obj.put("action", Notifyer.LIKE_NOTIFICATION_ACTION);
-                                    obj.put("channel", "Activities");
-
-                                    ParsePush push = new ParsePush();
-                                    push.setQuery(query);
-                                    push.setData(obj);
-                                    push.sendInBackground();
-
-                                } catch (JSONException el) {
-                                    el.printStackTrace();
-                                }
+//                                Notifyer nNotify = new Notifyer(ParseUser.getCurrentUser(), tunes, message, Notifyer.LIKE_NOTIFICATION_ACTION);
+//                                nNotify.sendNotification();
 
                                 holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like_pressed);
                                 getLikeCount(holder, tunes);
                                 holder.tune_progress.setVisibility(View.INVISIBLE);
-
                             }
                         });
                     } else {
-                        tunes.reduceLike(1);
-                        tunes.saveInBackground(new SaveCallback() {
+                        mTune.reduceLike(1);
+                        mTune.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
                                 isLiked = false;
                                 //deleteActivity
-                                deleteActivity(tunes);
+                                deleteActivity();
                                 holder.ic_tune_like.setImageResource(R.drawable.ic_tune_meta_like);
                                 getLikeCount(holder, tunes);
                                 holder.tune_progress.setVisibility(View.INVISIBLE);
-
                             }
                         });
                     }
@@ -277,11 +244,11 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
             }
         });
     }
-
-    private void deleteActivity(Tunes tunes) {
+//
+    private void deleteActivity() {
         ParseQuery<ParseObject> getLike = ParseQuery.getQuery("Activities");
         getLike.whereEqualTo("from", ParseUser.getCurrentUser());
-        getLike.whereEqualTo("tune", tunes.getObjectId());
+        getLike.whereEqualTo("tune", mTuneId);
         getLike.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject Obj, ParseException e) {
@@ -294,24 +261,18 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         });
     }
 
-    private void createActivity(Tunes tunes) {
-        Activities tLikeActivity = new Activities();
-
-        tLikeActivity.setFrom(ParseUser.getCurrentUser());
-        tLikeActivity.setTo(tunes.getArtist());
-        tLikeActivity.setActivityType("like");
-        tLikeActivity.setTuneId(tunes.getObjectId());
-
-//        tLikeActivity.put("from", ParseUser.getCurrentUser());
-//        tLikeActivity.put("to", tunes.getArtist());
-//        tLikeActivity.put("activity", "like");
-//        tLikeActivity.put("tune", tunes.getObjectId());
+    private void createActivity() {
+        ParseObject tLikeActivity = new ParseObject("Activities");
+        tLikeActivity.put("from", ParseUser.getCurrentUser());
+        tLikeActivity.put("to", mUserId);
+        tLikeActivity.put("activity", "like");
+        tLikeActivity.put("tune", mTuneId);
         tLikeActivity.saveInBackground();
     }
 
-    private void getLikeCount(final ViewHolder holder, Tunes tunes) {
+    private void getLikeCount(final ViewHolder holder, String tuneId) {
         ParseQuery<Tunes> cQuery = ParseQuery.getQuery(Tunes.class);
-        cQuery.whereEqualTo("objectId", tunes.getObjectId());
+        cQuery.whereEqualTo("objectId", tuneId);
         cQuery.getFirstInBackground(new GetCallback<Tunes>() {
             @Override
             public void done(Tunes tunes, ParseException e) {
@@ -326,22 +287,22 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
             }
         });
     }
-
-    private void ab(ViewHolder holder) {
-        AlertDialog.Builder ad = new AlertDialog.Builder(getContext());
-        ad.setMessage(R.string.not_connected_error_message)
-                .setTitle(R.string.not_connected_error_title)
-                .setPositiveButton(android.R.string.ok, null);
-        AlertDialog dialog = ad.create();
-        holder.btnPlay.setImageResource(R.drawable.btn_play);
-        dialog.show();
-    }
-
-    private void getLike(final ViewHolder holder, Tunes tunes) {
+//
+//    private void ab(ViewHolder holder) {
+//        AlertDialog.Builder ad = new AlertDialog.Builder(getContext());
+//        ad.setMessage(R.string.not_connected_error_message)
+//                .setTitle(R.string.not_connected_error_title)
+//                .setPositiveButton(android.R.string.ok, null);
+//        AlertDialog dialog = ad.create();
+//        holder.btnPlay.setImageResource(R.drawable.btn_play);
+//        dialog.show();
+//    }
+//
+    private void getLike(final ViewHolder holder) {
         ParseQuery<ParseObject> lQuery = ParseQuery.getQuery("Activities");
         lQuery.whereEqualTo("from", ParseUser.getCurrentUser());
-        lQuery.whereEqualTo("to", tunes.getArtist());
-        lQuery.whereEqualTo("tune", tunes.getObjectId());
+        lQuery.whereEqualTo("to", mParseUser);
+        lQuery.whereEqualTo("tune", mTuneId);
         lQuery.whereEqualTo("activity", "like");
         lQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
         lQuery.getFirstInBackground(new GetCallback<ParseObject>() {
@@ -360,7 +321,7 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
 
     private void playMusic(String tuneURL, int p) {
         Intent mServiceIntent = new Intent(getContext(), PlaySongService.class);
-        mServiceIntent.putExtra("tuneURL", tuneURL);
+        mServiceIntent.putExtra("mTuneURL", tuneURL);
         mServiceIntent.putExtra("tunePos", p);
         getContext().startService(mServiceIntent);
     }
@@ -370,18 +331,12 @@ public class TuneAdapter extends ArrayAdapter<Tunes> {
         getContext().stopService(mServiceIntent);
     }
 
-    private boolean checkConnectivity() {
-        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        isOnline = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting()|| cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting() || cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isAvailable();
-        return isOnline;
-    }
-
-    public void refill(List<Tunes> tunes){
-        mTunes.clear();
-        mTunes.addAll(tunes);
-        notifyDataSetChanged();
-    }
-
+//    public void refill(ArrayList<Tune> tunes){
+//        mTunes.clear();
+//        mTunes.addAll(tunes);
+//        notifyDataSetChanged();
+//    }
+//
     public static class ViewHolder {
         ImageView tuneArt;
         TextView title,

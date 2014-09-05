@@ -169,6 +169,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ProfileActivity" />
         </activity>
+        
+        <provider
+            android:name=".providers.TuneContentProvider"
+            android:authorities="com.pixel.singletune.app.providers.TuneContentProvider"
+            android:enabled="true"
+            android:exported="false">
+
+        </provider>
     </application>
 
 </manifest>

@@ -12,6 +12,8 @@ import com.parse.SaveCallback;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.helpers.FileHelper;
 
+import java.util.Date;
+
 /**
  * Created by mrsmith on 4/27/14.
  */
@@ -64,6 +66,10 @@ public class Tunes extends ParseObject {
 
     public int getLikeCount(){
         return getInt("Likes");
+    }
+
+    public Date getTuneCreatedAt(){
+        return getCreatedAt();
     }
 
     public void increaseLike(int likeCount){

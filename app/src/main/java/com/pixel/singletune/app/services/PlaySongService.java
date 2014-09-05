@@ -28,20 +28,16 @@ public class PlaySongService extends Service
         MediaPlayer.OnInfoListener,
         MediaPlayer.OnBufferingUpdateListener {
 
-    private MediaPlayer mp = new MediaPlayer();
-    private String setAudioLink;
-
+    //Setup broadcast identifier and intent
+    public static final String BROADCAST_BUFFER = "com.pixel.singletune.app.broadcastbuffer";
     //Set notificationID
     private static final int NOTIFICATION_ID = 1;
-
+    Intent bufferIntent;
+    int tunePos;
+    private MediaPlayer mp = new MediaPlayer();
     private boolean isPausedInCall = false;
     private PhoneStateListener psl;
     private TelephonyManager tm;
-
-    //Setup broadcast identifier and intent
-    public static final String BROADCAST_BUFFER = "com.pixel.singletune.app.broadcastbuffer";
-    Intent bufferIntent;
-    int tunePos;
 
     @Override
     public void onCreate() {
@@ -97,7 +93,7 @@ public class PlaySongService extends Service
         createNotification();
 
         //Get url from intent
-        setAudioLink = i.getExtras().getString("tuneURL");
+        String setAudioLink = i.getExtras().getString("tuneURL");
         // get tune Position from intent
         tunePos = i.getExtras().getInt("tunePos");
 
