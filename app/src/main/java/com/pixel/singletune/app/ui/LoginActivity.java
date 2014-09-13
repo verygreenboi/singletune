@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -34,6 +35,10 @@ public class LoginActivity extends Activity {
 
     protected TextView mSignupTextView;
     private ProgressDialog progressDialog;
+    private String username;
+    private String password;
+
+    private boolean mDoLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +76,26 @@ public class LoginActivity extends Activity {
             }
         });
 
+        username = mUsername.getText().toString();
+        password = mPassword.getText().toString();
+
+        username = username.trim().toLowerCase();
+        password = password.trim();
+
         // Login user
+
+        mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == R.id.action_sign_in){
+                    progressDialog = ProgressDialog.show(LoginActivity.this, "",
+                            "Signing in...", true);
+                    doLogin(username, password);
+                    return mDoLogin = true;
+                }
+                return mDoLogin = false;
+            }
+        });
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,53 +104,63 @@ public class LoginActivity extends Activity {
                 progressDialog = ProgressDialog.show(LoginActivity.this, "",
                         "Signing in...", true);
 
-                String username = mUsername.getText().toString();
-                String password = mPassword.getText().toString();
+                doLogin(username, password);
 
-                username = username.trim().toLowerCase();
-                password = password.trim();
 
-                if (username.isEmpty() || password.isEmpty()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage(R.string.login_error_message)
-                            .setTitle(R.string.login_error_label)
-                            .setPositiveButton(android.R.string.ok, null);
-                    AlertDialog dialog = builder.create();
-                    // Close progress dialog
-                    progressDialog.dismiss();
-                    dialog.show();
-                } else {
-                    ParseUser.logInInBackground(username, password, new LogInCallback() {
-                        @Override
-                        public void done(ParseUser user, ParseException e) {
-                            if (e == null) {
-                                // Success
-
-                                // Close progress dialog
-                                progressDialog.dismiss();
-
-                                // Associate the device with a user
-                                SingleTuneApplication.UpdateParseInstallation(user);
-
-                                showMainActivity(MainActivity.class);
-                            } else {
-                                 /* TODO Clean up returned error message */
-                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                builder.setMessage(e.getMessage())
-                                        .setTitle(R.string.title_signup_error)
-                                        .setPositiveButton(android.R.string.ok, null);
-                                AlertDialog dialog = builder.create();
-
-                                // Close progress dialog
-                                progressDialog.dismiss();
-                                dialog.show();
-                            }
-                        }
-                    });
-                }
             }
         });
 
+    }
+
+    private void doLogin(String username, String password) {
+
+        if (username.isEmpty() || password.isEmpty()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+            builder.setMessage(R.string.login_error_message)
+                    .setTitle(R.string.login_error_label)
+                    .setPositiveButton(android.R.string.ok, null);
+            AlertDialog dialog = builder.create();
+            dismissProgressDialog();
+
+            dialog.show();
+        } else {
+            ParseUser.logInInBackground(username, password, new LogInCallback() {
+                @Override
+                public void done(ParseUser user, ParseException e) {
+                    if (e == null) {
+                        // Success
+
+                        // Close progress dialog
+                        dismissProgressDialog();
+
+                        // Associate the device with a user
+                        SingleTuneApplication.UpdateParseInstallation(user);
+
+                        showMainActivity(MainActivity.class);
+                    } else {
+                     /* TODO Clean up returned error message */
+                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                        builder.setMessage(e.getMessage())
+                                .setTitle(R.string.title_signup_error)
+                                .setPositiveButton(android.R.string.ok, null);
+                        AlertDialog dialog = builder.create();
+
+                        // Close progress dialog
+                        dismissProgressDialog();
+                        dialog.show();
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    private void dismissProgressDialog() {
+        // Close progress dialog
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     private void showMainActivity(Class c) {

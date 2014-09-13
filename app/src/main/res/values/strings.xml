@@ -104,5 +104,6 @@
     <string name="title_section_following">Following</string>
     <string name="title_section_followers">Followers</string>
     <string name="no_new_tune_message">No new Tunes found!</string>
+    <string name="signin">Sign in</string>
 
 </resources>
