@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.pixel.singletune.app.R;
@@ -93,7 +94,8 @@ public class PlaySongService extends Service
         createNotification();
 
         //Get url from intent
-        String setAudioLink = i.getExtras().getString("tuneURL");
+        String setAudioLink = i.getExtras().getString("mTuneURL");
+        Log.i("TAG", setAudioLink);
         // get tune Position from intent
         tunePos = i.getExtras().getInt("tunePos");
 

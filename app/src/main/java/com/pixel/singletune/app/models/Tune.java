@@ -1,5 +1,6 @@
 package com.pixel.singletune.app.models;
 
+import com.orm.SugarRecord;
 import com.pixel.singletune.app.helpers.TuneDbHelper;
 
 import org.json.JSONArray;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by mrsmith on 9/2/14.
  */
-public class Tune {
+public class Tune extends SugarRecord<Tune> {
 
     public static final String TITLE = "title";
     public static final String TUNE_OBJECT_ID = "tuneObjectId";
@@ -27,12 +28,13 @@ public class Tune {
     private String tuneArtUrl;
     private String artisteName;
     private String artisteObjectId;
+    private String createdAt;
 
     public Tune(){
         super();
     }
 
-    public Tune(String title, String tuneObjectId, String tuneAudioUrl,String tuneArtUrl, String artisteName, String artisteObjectId){
+    public Tune(String title, String tuneObjectId, String tuneAudioUrl,String tuneArtUrl, String artisteName, String artisteObjectId, String createdAt){
         super();
         this.title = title;
         this.tuneObjectId = tuneObjectId;
@@ -40,6 +42,7 @@ public class Tune {
         this.tuneArtUrl = tuneArtUrl;
         this.artisteName = artisteName;
         this.artisteObjectId = artisteObjectId;
+        this.createdAt = createdAt;
     }
 
     public Tune(String jsonString){
@@ -52,6 +55,7 @@ public class Tune {
             tuneArtUrl = json.optString(TUNE_ART_URL);
             artisteName = json.optString(ARTISTE_NAME);
             artisteObjectId = json.optString(ARTISTE_OBJECT_ID);
+            createdAt = json.optString(TuneDbHelper.CREATED_AT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -65,6 +69,7 @@ public class Tune {
             this.tuneArtUrl = object.getString(TuneDbHelper.TUNE_ART_URL);
             this.artisteName = object.getString(TuneDbHelper.ARTISTE_NAME);
             this.artisteObjectId = object.getString(TuneDbHelper.ARTISTE_OBJECT_ID);
+            this.createdAt = object.getString(TuneDbHelper.CREATED_AT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -128,6 +133,10 @@ public class Tune {
         this.artisteObjectId = artisteObjectId;
     }
 
+    public String getCreatedAt(){
+        return createdAt;
+    }
+
     public String getArtisteName(){
         return artisteName;
     }
@@ -147,6 +156,7 @@ public class Tune {
             json.put(TUNE_ART_URL, tuneArtUrl);
             json.put(ARTISTE_OBJECT_ID, artisteObjectId);
             json.put(ARTISTE_NAME, artisteName);
+            json.put(TuneDbHelper.CREATED_AT, createdAt);
         }
         catch (JSONException e){
             e.printStackTrace();

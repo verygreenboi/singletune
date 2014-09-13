@@ -1,12 +1,12 @@
 package com.pixel.singletune.app;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.orm.SugarApp;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
@@ -24,7 +24,7 @@ import com.pixel.singletune.app.utils.UIUtils;
 /**
  * Created by smith on 3/30/14.
  */
-public class SingleTuneApplication extends Application {
+public class SingleTuneApplication extends SugarApp {
     public static final String TAG = "SingleTune";
     private static  SingleTuneApplication mInstance;
     LruBitmapCache mLruBitmapCache;

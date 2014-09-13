@@ -1,8 +1,5 @@
 package com.pixel.singletune.app.fragments;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -22,7 +19,6 @@ import com.pixel.singletune.app.adapters.TuneAdapter;
 import com.pixel.singletune.app.helpers.TuneDbHelper;
 import com.pixel.singletune.app.interfaces.OnFragmentInteractionListener;
 import com.pixel.singletune.app.models.Tune;
-import com.pixel.singletune.app.providers.TuneContentProvider;
 import com.pixel.singletune.app.subClasses.Tunes;
 
 import org.json.JSONArray;
@@ -31,12 +27,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class TimelineFragment extends BaseListFragment implements LoaderManager.LoaderCallbacks<Object> {
-
-
 
     protected SwipeRefreshLayout.OnRefreshListener OnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
@@ -45,15 +38,17 @@ public class TimelineFragment extends BaseListFragment implements LoaderManager.
             Log.i(TAG, "Has refreshed");
         }
     };
-    List mTuneList = new ArrayList<String>();
-    JSONArray tuneArray = new JSONArray();
+    private JSONArray tuneArray = new JSONArray();
     private OnFragmentInteractionListener mListener;
+    private TuneAdapter adapter;
+    private List<Tune> mTuneList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getTunes();
+
 
     }
 
@@ -95,7 +90,7 @@ public class TimelineFragment extends BaseListFragment implements LoaderManager.
 
         ArrayList<Tune> t = Tune.fromJson(tuneArray);
 
-        TuneAdapter adapter = new TuneAdapter(getActivity().getApplicationContext(), t);
+        adapter = new TuneAdapter(getActivity().getApplicationContext(), t);
         setListAdapter(adapter);
 
     }
@@ -126,74 +121,94 @@ public class TimelineFragment extends BaseListFragment implements LoaderManager.
     }
 
     private void getTunes() {
-        ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
-        query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
-        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.setMaxCacheAge(TimeUnit.HOURS.toHours(3));
-        query.include("parent");
-        query.findInBackground(new FindCallback<Tunes>() {
-            @Override
-            public void done(List<Tunes> tunes, ParseException e) {
-                if (mSwipeRefreshLayout.isRefreshing()){
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-                try {
-                    getActivity().setProgressBarIndeterminateVisibility(false);
-                } catch (Exception err) {
-                    err.printStackTrace();
-                }
+        long mTuneCount = Tune.count(Tune.class, null, null);
+        String tuneCreatedAt = null;
 
-                if (e == null){
+        if (mTuneCount > 0){
+//            Select tuneQuery = Select.from(Tune.class).orderBy(TuneDbHelper.CREATED_AT).limit(String.valueOf(1));
+//
+//            final Tune mTune = (Tune) tuneQuery.first();
 
-                    ContentResolver cr = getActivity().getContentResolver();
-                    for (Tunes tune : tunes){
+            List<Tune> l = Tune.findWithQuery(Tune.class, "select * from Tune order by id desc limit ?", "1");
 
-                        ContentValues cv = new ContentValues(1);
-                        cv.put(TuneDbHelper.TUNE_TITLE, tune.getTitle());
-                        cv.put(TuneDbHelper.TUNE_OBJECT_ID, tune.getObjectId());
-                        cv.put(TuneDbHelper.TUNE_AUDIO_URL, tune.getSongFile().getUrl());
-                        cv.put(TuneDbHelper.TUNE_ART_URL, tune.getCoverArt().getUrl());
-                        cv.put(TuneDbHelper.ARTISTE_OBJECT_ID, tune.getArtist().getObjectId());
-                        cv.put(TuneDbHelper.ARTISTE_NAME, tune.getArtist().getUsername());
-                        cv.put(TuneDbHelper.CREATED_AT, tune.getTuneCreatedAt().toString());
+            for (Tune lT : l){
+                tuneCreatedAt = lT.getCreatedAt();
+            }
 
-                        cr.insert(TuneContentProvider.TUNE_URI, cv);
 
+
+            ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
+            query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
+            query.whereGreaterThan("createdAt", tuneCreatedAt);
+            query.include("parent");
+            query.findInBackground(new FindCallback<Tunes>() {
+                @Override
+                public void done(List<Tunes> t, ParseException e) {
+                    if(mSwipeRefreshLayout.isRefreshing()){
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                    if (e == null){
+                        for (Tunes tune : t){
+                            Tune mTunes = new Tune(
+                                    tune.getTitle(),
+                                    tune.getObjectId(),
+                                    tune.getSongFile().getUrl(),
+                                    tune.getCoverArt().getUrl(),
+                                    tune.getArtist().getUsername(),
+                                    tune.getArtist().getObjectId(),
+                                    tune.getCreatedAt().toString()
+                            );
+
+                            mTunes.save();
+                        }
                     }
                 }
-            }
-        });
+            });
+
+        }else {
+            ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
+            query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
+            query.include("parent");
+            query.findInBackground(new FindCallback<Tunes>() {
+                @Override
+                public void done(List<Tunes> t, ParseException e) {
+                    if(mSwipeRefreshLayout.isRefreshing()){
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                    if (e == null){
+                        for (Tunes tune : t){
+                            Tune mTunes = new Tune(
+                                    tune.getTitle(),
+                                    tune.getObjectId(),
+                                    tune.getSongFile().getUrl(),
+                                    tune.getCoverArt().getUrl(),
+                                    tune.getArtist().getUsername(),
+                                    tune.getArtist().getObjectId(),
+                                    tune.getCreatedAt().toString()
+                            );
+
+                            mTunes.save();
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private void tuneContentQuery() {
-        String[] colums = {
-                TuneDbHelper.TUNE_OBJECT_ID,
-                TuneDbHelper.TUNE_TITLE,
-                TuneDbHelper.TUNE_AUDIO_URL,
-                TuneDbHelper.TUNE_ART_URL,
-                TuneDbHelper.ARTISTE_OBJECT_ID,
-                TuneDbHelper.ARTISTE_NAME
-        };
+        mTuneList = Tune.listAll(Tune.class);
 
-        Cursor c = getActivity().getContentResolver().query(
-                TuneContentProvider.TUNE_URI,
-                colums,
-                null,
-                null,
-                null
-        );
+        tuneArray = new JSONArray();
 
-        c.moveToFirst();
-
-        while (c.moveToNext()){
+        for (Tune t : mTuneList){
             JSONObject tune = new JSONObject();
-
-            String tID = c.getString(c.getColumnIndex(TuneDbHelper.TUNE_OBJECT_ID));
-            String tuneTitle = c.getString(c.getColumnIndex(TuneDbHelper.TUNE_TITLE));
-            String tuneAudioUrl = c.getString(c.getColumnIndex(TuneDbHelper.TUNE_AUDIO_URL));
-            String tuneArtUrl = c.getString(c.getColumnIndex(TuneDbHelper.TUNE_ART_URL));
-            String artisteObjId = c.getString(c.getColumnIndex(TuneDbHelper.ARTISTE_OBJECT_ID));
-            String artisteName = c.getString(c.getColumnIndex(TuneDbHelper.ARTISTE_NAME));
+            String tID = t.getTuneObjectId();
+            String tuneTitle = t.getTitle();
+            String tuneAudioUrl = t.getTuneAudioUrl();
+            String tuneArtUrl = t.getTuneArtUrl();
+            String artisteObjId = t.getArtisteObjectId();
+            String artisteName = t.getArtisteName();
+            String createdAt = t.getCreatedAt();
 
             try {
                 tune.put(TuneDbHelper.TUNE_OBJECT_ID, tID);
@@ -202,12 +217,14 @@ public class TimelineFragment extends BaseListFragment implements LoaderManager.
                 tune.put(TuneDbHelper.TUNE_ART_URL, tuneArtUrl);
                 tune.put(TuneDbHelper.ARTISTE_OBJECT_ID, artisteObjId);
                 tune.put(TuneDbHelper.ARTISTE_NAME, artisteName);
+                tune.put(TuneDbHelper.CREATED_AT, createdAt);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
             tuneArray.put(tune);
+
         }
-        c.close();
     }
 }
