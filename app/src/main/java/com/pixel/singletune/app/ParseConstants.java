@@ -10,11 +10,13 @@ public final class ParseConstants {
     // Class name
     public static final String CLASS_MESSAGES = "Messages";
     public static final String CLASS_TUNES = "Tunes";
+    public static final String CLASS_FOLLOW = "Follow";
 
 
     //      Field names
     public static final String KEY_USER = "_user";
     public static final String KEY_USER_ID = "userId";
+    public static final String KEY_CURRENT_USER_ID = "cUserId";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_FRIENDS_RELATION = "friendsRelation";
     public static final String KEY_RECIPIENT_IDS = "recipientIds";
@@ -34,6 +36,10 @@ public final class ParseConstants {
     public static final String BROADCAST_ACTION = "com.pixel.singletune.app.BROADCAST";
     public static final String EXTENDED_DATA_STATUS = "com.pixel.singletune.app.STATUS";
     public static final String EXTENDED_STATUS_LOG = "com.pixel.singletune.app.LOG";
+
+    // Cloud functions
+
+    public static final String CLOUD_FUNCTION_USER_SEARCH = "friendSearch";
 
     public static final  String KEY_UPLOADING = "Uploading";
     /*

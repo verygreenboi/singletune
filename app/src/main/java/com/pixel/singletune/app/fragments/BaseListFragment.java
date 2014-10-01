@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * Created by mrsmith on 8/6/14.
+ * BaseListFragment
  */
 public abstract class BaseListFragment extends ListFragment{
 

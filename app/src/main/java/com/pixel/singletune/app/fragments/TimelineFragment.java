@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
+import com.parse.ParseUser;
 import com.pixel.singletune.app.ParseConstants;
 import com.pixel.singletune.app.R;
 import com.pixel.singletune.app.SingleTuneApplication;
@@ -26,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -42,14 +45,16 @@ public class TimelineFragment extends BaseListFragment implements LoaderManager.
     private OnFragmentInteractionListener mListener;
     private TuneAdapter adapter;
     private List<Tune> mTuneList;
+    private ParseUser mCurrentUser;
+    private List<ParseUser> mFriends;
+    private ParseRelation mFriendRelation;
+    private String[] tuneQueryIdList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mCurrentUser = ParseUser.getCurrentUser();
         getTunes();
-
-
     }
 
     @Override
@@ -125,9 +130,6 @@ public class TimelineFragment extends BaseListFragment implements LoaderManager.
         String tuneCreatedAt = null;
 
         if (mTuneCount > 0){
-//            Select tuneQuery = Select.from(Tune.class).orderBy(TuneDbHelper.CREATED_AT).limit(String.valueOf(1));
-//
-//            final Tune mTune = (Tune) tuneQuery.first();
 
             List<Tune> l = Tune.findWithQuery(Tune.class, "select * from Tune order by id desc limit ?", "1");
 
@@ -135,11 +137,16 @@ public class TimelineFragment extends BaseListFragment implements LoaderManager.
                 tuneCreatedAt = lT.getCreatedAt();
             }
 
-
+            selectFriends();
 
             ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
             query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
             query.whereGreaterThan("createdAt", tuneCreatedAt);
+            try {
+                query.whereContainedIn("artisteId", Arrays.asList(tuneQueryIdList));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             query.include("parent");
             query.findInBackground(new FindCallback<Tunes>() {
                 @Override
@@ -168,6 +175,11 @@ public class TimelineFragment extends BaseListFragment implements LoaderManager.
         }else {
             ParseQuery<Tunes> query = ParseQuery.getQuery(Tunes.class);
             query.addDescendingOrder(ParseConstants.KEY_CREATED_AT);
+            try {
+                query.whereContainedIn("artisteId", Arrays.asList(tuneQueryIdList));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             query.include("parent");
             query.findInBackground(new FindCallback<Tunes>() {
                 @Override
@@ -193,6 +205,31 @@ public class TimelineFragment extends BaseListFragment implements LoaderManager.
                 }
             });
         }
+    }
+
+    private void selectFriends() {
+        mFriendRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
+        mFriendRelation.getQuery().findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> list, ParseException e) {
+                mFriends = list;
+
+                // Add current user to Friends list
+
+                mFriends.add(mCurrentUser);
+
+                int i = 0;
+
+                tuneQueryIdList = new String[mFriends.size()];
+
+                for (ParseUser user : mFriends){
+                    tuneQueryIdList[i] = user.getObjectId();
+                    i++;
+                }
+
+            }
+        });
+
     }
 
     private void tuneContentQuery() {

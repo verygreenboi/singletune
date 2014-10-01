@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.GetCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -30,6 +33,7 @@ import com.pixel.singletune.app.adapters.UserAdapter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -38,8 +42,9 @@ import butterknife.InjectView;
 
 public class SearchActivity extends Activity {
 
-
     public static final String TAG = SearchActivity.class.getSimpleName();
+    protected ParseRelation<ParseUser> mFriendsRelation;
+    protected ParseUser mCurrentUser;
     protected AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         Boolean followed;
 
@@ -48,8 +53,7 @@ public class SearchActivity extends Activity {
             ImageView checkAvatarView = (ImageView) view.findViewById(R.id.selectedAvatarImageView);
 //            TODO: Remember to use overlay image
             if (mGridView.isItemChecked(i)) {
-                //TODO: Refactor as it might be redundant
-                mFriendsRelation.add(mUsers.get(i));
+                // mFriendsRelation.add(mUsers.get(i));
 
                 ParseObject follow = new ParseObject("Follow");
                 follow.put("from", ParseUser.getCurrentUser());
@@ -66,19 +70,31 @@ public class SearchActivity extends Activity {
                 // Add Checkmark
                 checkAvatarView.setVisibility(View.VISIBLE);
 
-                // Send Push Notification
-                sendPushNotification(mUsers.get(i).getObjectId(), followed);
+                // Send Push Notification REDUNDANT: Sends from cloud.
+                // sendPushNotification(mUsers.get(i).getObjectId(), followed);
+
                 Log.d(TAG, "Checked");
             } else {
+                // New remove friend
+                ParseQuery<ParseObject> followQuery = ParseQuery.getQuery(ParseConstants.CLASS_FOLLOW);
+                followQuery.whereEqualTo("from", mCurrentUser);
+                followQuery.whereEqualTo("to", mUsers.get(i));
+                followQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject followObject, ParseException e) {
+                        followObject.deleteInBackground();
+                    }
+                });
+
                 // remove the friend
-                mFriendsRelation.remove(mUsers.get(i));
+                //mFriendsRelation.remove(mUsers.get(i));
                 followed = false;
 
                 // Remove checkmark
                 checkAvatarView.setVisibility(View.INVISIBLE);
 
                 // Send push notification
-                sendPushNotification(mUsers.get(i).getObjectId(), followed);
+                // sendPushNotification(mUsers.get(i).getObjectId(), followed);
             }
             mCurrentUser.saveInBackground(new SaveCallback() {
                 @Override
@@ -90,8 +106,6 @@ public class SearchActivity extends Activity {
             });
         }
     };
-    protected ParseRelation<ParseUser> mFriendsRelation;
-    protected ParseUser mCurrentUser;
     protected GridView mGridView;
     protected List<ParseUser> mUsers;
     @InjectView(R.id.search_editText)
@@ -133,6 +147,26 @@ public class SearchActivity extends Activity {
         setProgressBarIndeterminateVisibility(true);
 
         String gUsername = gUname.getText().toString();
+
+//        TODO: Use cloud code
+
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put(ParseConstants.KEY_USERNAME, gUsername);
+        params.put(ParseConstants.KEY_CURRENT_USER_ID, mCurrentUser.getObjectId());
+
+        ParseCloud.callFunctionInBackground(
+                ParseConstants.CLOUD_FUNCTION_USER_SEARCH,
+                params,
+                new FunctionCallback<Object>() {
+
+                @Override
+                public void done(Object results, ParseException e) {
+                    if (e == null){
+                        Log.d(TAG, results.toString());
+                    }
+                }
+        });
+
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereContains("username", gUsername);
         query.whereNotEqualTo("objectId", mCurrentUser.getObjectId());
